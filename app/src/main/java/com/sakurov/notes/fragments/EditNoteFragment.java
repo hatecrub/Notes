@@ -1,0 +1,70 @@
+package com.sakurov.notes.fragments;
+
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+
+import com.sakurov.notes.Communicator;
+import com.sakurov.notes.R;
+import com.sakurov.notes.entities.Note;
+import com.sakurov.notes.entities.User;
+import com.sakurov.notes.helpers.DBSource;
+
+/**
+ * Created by sakurov on 23.10.17.
+ */
+
+public class EditNoteFragment extends Fragment {
+
+    private EditText editNote;
+    private FloatingActionButton fabDone;
+
+    private DBSource mSource;
+    private Communicator mCommunicator;
+
+    private Note mNote;
+    private User mUser;
+
+    public EditNoteFragment setNote(Note note) {
+        this.mNote = note;
+        return this;
+    }
+
+    public EditNoteFragment setUser(User user) {
+        this.mUser = user;
+        return this;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mCommunicator = (Communicator) getActivity();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_edit_note, container, false);
+
+        mSource = new DBSource(getActivity());
+
+        editNote = rootView.findViewById(R.id.text);
+        fabDone = rootView.findViewById(R.id.fab_done);
+        fabDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mNote == null) {
+                    mSource.addNote(new Note(mUser.getId(), editNote.getText().toString()));
+                    mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser));
+                }
+            }
+        });
+
+        return rootView;
+    }
+}
