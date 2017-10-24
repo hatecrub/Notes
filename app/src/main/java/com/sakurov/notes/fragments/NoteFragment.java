@@ -1,6 +1,5 @@
 package com.sakurov.notes.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -9,59 +8,64 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sakurov.notes.Communicator;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.User;
 
-public class NoteFragment extends Fragment {
+public class NoteFragment extends BaseFragment {
 
-    private TextView text, author, created, edited;
-    private FloatingActionButton fabEdit;
+    private static final String USER = "user";
+    private static final String NOTE = "note";
 
     private Note mNote;
     private User mUser;
 
-    private Communicator mCommunicator;
+    public static NoteFragment newInstance(User user, Note note) {
 
-    public NoteFragment setUser(User user) {
-        this.mUser = user;
-        return this;
-    }
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(USER, user);
+        bundle.putParcelable(NOTE, note);
 
-    public NoteFragment setNote(Note note) {
-        this.mNote = note;
-        return this;
+        NoteFragment fragment = new NoteFragment();
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mCommunicator = (Communicator) getActivity();
+    protected void readBundle(Bundle bundle) {
+        if (bundle != null) {
+            mNote = bundle.getParcelable(NOTE);
+            mUser = bundle.getParcelable(USER);
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_note, container, false);
-        text = rootView.findViewById(R.id.text);
-        author = rootView.findViewById(R.id.author);
-        created = rootView.findViewById(R.id.created);
-        edited = rootView.findViewById(R.id.edited);
-        fabEdit = rootView.findViewById(R.id.fab_edit);
 
-        fabEdit.setOnClickListener(new View.OnClickListener() {
+        TextView noteText = rootView.findViewById(R.id.text);
+        TextView noteAuthor = rootView.findViewById(R.id.author);
+        TextView noteDateCreated = rootView.findViewById(R.id.created);
+        TextView noteDateEdited = rootView.findViewById(R.id.edited);
+        FloatingActionButton fabEditNote = rootView.findViewById(R.id.fab_edit);
+
+        readBundle(getArguments());
+
+        fabEditNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mCommunicator != null && mUser != null && mNote != null)
-                    mCommunicator.replaceFragment(new EditNoteFragment().setUser(mUser).setNote(mNote), true);
+                if (mNote != null) {
+                    replaceFragment(EditNoteFragment.newInstance(mNote), true);
+                }
             }
         });
 
-        text.setText(mNote.getText());
-        author.setText("Author: " + mUser.getName());
-        created.setText("Created: " + mNote.getDateCreated());
-        edited.setText("Edited: " + mNote.getDateEdited());
+        noteText.setText(mNote.getText());
+        noteAuthor.setText("Author: " + mUser.getName());
+        noteDateCreated.setText("Created: " + mNote.getDateCreated());
+        noteDateEdited.setText("Edited: " + mNote.getDateEdited());
         return rootView;
     }
 }

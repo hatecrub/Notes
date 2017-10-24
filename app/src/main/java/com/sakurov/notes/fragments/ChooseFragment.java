@@ -1,6 +1,5 @@
 package com.sakurov.notes.fragments;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -8,18 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.sakurov.notes.Communicator;
 import com.sakurov.notes.R;
 
-public class ChooseFragment extends Fragment implements View.OnClickListener {
+public class ChooseFragment extends BaseFragment implements View.OnClickListener {
 
-    Button signIn, signUp;
-    Communicator mCommunicator;
+    public static ChooseFragment newInstance() {
+        return new ChooseFragment();
+    }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mCommunicator = (Communicator) getActivity();
+    protected void readBundle(Bundle bundle) {
     }
 
     @Nullable
@@ -27,27 +24,23 @@ public class ChooseFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_choose, container, false);
+        Button signInButton = rootView.findViewById(R.id.sign_in);
+        Button signUpButton = rootView.findViewById(R.id.sign_up);
 
-        signIn = rootView.findViewById(R.id.sign_in);
-        signUp = rootView.findViewById(R.id.sign_up);
-
-        signIn.setOnClickListener(this);
-        signUp.setOnClickListener(this);
+        signInButton.setOnClickListener(this);
+        signUpButton.setOnClickListener(this);
 
         return rootView;
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.sign_in: {
-                mCommunicator.replaceFragment(new AuthFragment().setAction(AuthFragment.IN),true);
-                break;
-            }
-            case R.id.sign_up: {
-                mCommunicator.replaceFragment(new AuthFragment().setAction(AuthFragment.UP),true);
-                break;
-            }
+        int action;
+        if (view.getId() == R.id.sign_in) {
+            action = AuthFragment.IN;
+        } else {
+            action = AuthFragment.UP;
         }
+        replaceFragment(AuthFragment.newInstance(action), true);
     }
 }

@@ -96,12 +96,12 @@ public class DBSource {
         return rowId;
     }
 
-    public List<Note> getNotes(User user) {
+    public List<Note> getNotes(long userId) {
         List<Note> notes = new ArrayList<>();
         read();
         Cursor cursor = mDatabase.query(DBHelper.NOTES, null,
                 DBHelper.USER_ID + "=?",
-                new String[]{"" + user.getId()},
+                new String[]{"" + userId},
                 null, null, null);
         if (cursor.moveToFirst()) {
             do {

@@ -1,8 +1,11 @@
 package com.sakurov.notes.entities;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
-public class Note {
+public class Note implements Parcelable {
 
     private long id;
     private final long userId;
@@ -53,4 +56,42 @@ public class Note {
     public String getDateEdited() {
         return dateEdited;
     }
+
+//--------------------------------Parcelable implementation-----------------------------------------
+
+    private Note(Parcel in) {
+        id = in.readLong();
+        userId = in.readLong();
+        text = in.readString();
+        dateCreated = in.readString();
+        dateEdited = in.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeLong(userId);
+        dest.writeString(text);
+        dest.writeString(dateCreated);
+        dest.writeString(dateEdited);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Note> CREATOR = new Parcelable.Creator<Note>() {
+        @Override
+        public Note createFromParcel(Parcel in) {
+            return new Note(in);
+        }
+
+        @Override
+        public Note[] newArray(int size) {
+            return new Note[size];
+        }
+    };
+
 }

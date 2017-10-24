@@ -1,6 +1,8 @@
 package com.sakurov.notes;
 
+import android.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +18,15 @@ import java.util.List;
 public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdapter.NoteViewHolder> {
 
     private List<Note> mNotes;
-    private Communicator mCommunicator;
+    private FragmentManager mFragmentManager;
     private User mUser;
-
-    public void setCommunicator(Communicator communicator) {
-        this.mCommunicator = communicator;
-    }
 
     public void updateList(List<Note> notes) {
         this.mNotes = notes;
     }
 
-    public NotesRecyclerAdapter(List<Note> notes, User user) {
-        updateList(notes);
+    public NotesRecyclerAdapter(FragmentManager fragmentManager, User user) {
+        this.mFragmentManager = fragmentManager;
         this.mUser = user;
     }
 
@@ -39,15 +37,9 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
-        Note note = mNotes.get(position);
-        holder.text.setText(note.getText());
-        holder.created.setText("Created " + note.getDateCreated());
-        holder.root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        final Note note = mNotes.get(position);
+        holder.noteText.setText(note.getText());
+        holder.noteDateCreated.setText("Created: " + note.getDateCreated());
     }
 
     @Override
@@ -56,22 +48,27 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     }
 
     class NoteViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout root;
-        TextView text;
-        TextView created;
+        LinearLayout rootView;
+        TextView noteText;
+        TextView noteDateCreated;
 
         NoteViewHolder(View view) {
             super(view);
-            root = view.findViewById(R.id.root);
-            text = view.findViewById(R.id.text);
-            created = view.findViewById(R.id.created);
+            rootView = view.findViewById(R.id.root);
+            noteText = view.findViewById(R.id.text);
+            noteDateCreated = view.findViewById(R.id.created);
 
-            root.setOnClickListener(new View.OnClickListener() {
+            rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (mCommunicator != null && mUser != null)
-                        mCommunicator.replaceFragment(new NoteFragment().
-                                setNote(mNotes.get(getAdapterPosition())).setUser(mUser), true);
+                    Log.d("Adapter", "BackStackCountBefore: " + mFragmentManager.getBackStackEntryCount());
+                    mFragmentManager
+                            .beginTransaction()
+                            .replace(R.id.container,
+                                    NoteFragment.newInstance(mUser, mNotes.get(getAdapterPosition())))
+                            .addToBackStack(NoteFragment.class.getSimpleName())
+                            .commit();
+                    Log.d("Adapter", "BackStackCountAfter: " + mFragmentManager.getBackStackEntryCount());
                 }
             });
         }
