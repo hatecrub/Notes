@@ -14,7 +14,11 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/user_name" />
+            android:hint="@string/user_name"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:textColor="@color/primary_text"
+            android:textSize="20sp" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -27,7 +31,11 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password" />
+            android:hint="@string/password"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:textColor="@color/primary_text"
+            android:textSize="20sp" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -35,8 +43,10 @@
         android:id="@+id/action"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:padding="8dp" />
+        android:layout_margin="8dp"
+        android:background="@color/primary_light"
+        android:textAllCaps="false"
+        android:textColor="@color/primary_text"
+        android:textSize="20sp" />
 
 </LinearLayout>

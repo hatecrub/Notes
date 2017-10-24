@@ -46,11 +46,11 @@ public class ChooseFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sign_in: {
-                mCommunicator.replaceFragment(new AuthFragment().setAction(AuthFragment.IN));
+                mCommunicator.replaceFragment(new AuthFragment().setAction(AuthFragment.IN),true);
                 break;
             }
             case R.id.sign_up: {
-                mCommunicator.replaceFragment(new AuthFragment().setAction(AuthFragment.UP));
+                mCommunicator.replaceFragment(new AuthFragment().setAction(AuthFragment.UP),true);
                 break;
             }
         }

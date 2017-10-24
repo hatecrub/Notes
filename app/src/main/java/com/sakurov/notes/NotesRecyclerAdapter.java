@@ -23,7 +23,7 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     private Communicator mCommunicator;
     private User mUser;
 
-    public void updateCommunicator(Communicator communicator) {
+    public void setCommunicator(Communicator communicator) {
         this.mCommunicator = communicator;
     }
 
@@ -32,7 +32,7 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     }
 
     public NotesRecyclerAdapter(List<Note> notes, User user) {
-        this.mNotes = notes;
+        updateList(notes);
         this.mUser = user;
     }
 
@@ -43,8 +43,11 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
         Note note = mNotes.get(position);
-        holder.text.setText(note.getText());
-        holder.createdBy.setText("Created " + note.getDateCreated());
+        if (note.getText().length() > 50)
+            holder.text.setText(note.getText().substring(0, 46) + "...");
+        else
+            holder.text.setText(note.getText());
+        holder.created.setText("Created " + note.getDateCreated());
     }
 
     @Override
@@ -55,20 +58,20 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     class NoteViewHolder extends RecyclerView.ViewHolder {
         LinearLayout root;
         TextView text;
-        TextView createdBy;
+        TextView created;
 
         NoteViewHolder(View view) {
             super(view);
             root = view.findViewById(R.id.root);
             text = view.findViewById(R.id.text);
-            createdBy = view.findViewById(R.id.created);
+            created = view.findViewById(R.id.created);
 
             root.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (mCommunicator != null && mUser != null)
                         mCommunicator.replaceFragment(new NoteFragment().
-                                setNote(mNotes.get(getAdapterPosition())).setUser(mUser));
+                                setNote(mNotes.get(getAdapterPosition())).setUser(mUser), true);
                 }
             });
         }

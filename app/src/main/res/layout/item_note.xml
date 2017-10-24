@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="2dp"
     android:layout_marginTop="2dp"
-    android:background="#BBB"
+    android:background="@color/primary_light"
     android:elevation="1dp"
     android:orientation="vertical">
 
@@ -14,12 +14,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:textSize="18sp" />
+        android:textColor="@color/primary_text"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/created"
+        android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:textColor="@color/secondary_text"
+        android:textSize="18sp" />
 
 </LinearLayout>

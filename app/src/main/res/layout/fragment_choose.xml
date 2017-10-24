@@ -9,20 +9,22 @@
         android:id="@+id/sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_margin="8dp"
+        android:background="@color/primary_light"
         android:text="@string/sign_in"
         android:textAllCaps="false"
-        android:textSize="24sp" />
+        android:textColor="@color/primary_text"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_margin="8dp"
+        android:background="@color/primary_light"
         android:text="@string/sign_up"
         android:textAllCaps="false"
-        android:textSize="24sp" />
+        android:textColor="@color/primary_text"
+        android:textSize="20sp" />
 
 </LinearLayout>

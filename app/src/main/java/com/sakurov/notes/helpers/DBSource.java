@@ -128,4 +128,19 @@ public class DBSource {
         return rowId;
     }
 
+    public void updateNote(Note note) {
+        write();
+
+        ContentValues cvNote = new ContentValues();
+
+        cvNote.put(DBHelper.USER_ID, note.getUserId());
+        cvNote.put(DBHelper.TEXT, note.getText());
+        cvNote.put(DBHelper.DATE_CREATED, note.getDateCreated());
+        cvNote.put(DBHelper.DATE_EDITED, note.getDateEdited());
+
+        mDatabase.update(DBHelper.NOTES, cvNote, DBHelper.ID + "=?", new String[]{"" + note.getId()});
+
+        close();
+    }
+
 }

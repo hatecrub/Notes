@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.sakurov.notes.Communicator;
 import com.sakurov.notes.R;
@@ -55,16 +56,34 @@ public class EditNoteFragment extends Fragment {
 
         editNote = rootView.findViewById(R.id.text);
         fabDone = rootView.findViewById(R.id.fab_done);
+
+        if (mNote != null) {
+            editNote.setText(mNote.getText());
+        }
+
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mNote == null) {
-                    mSource.addNote(new Note(mUser.getId(), editNote.getText().toString()));
-                    mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser));
-                }
+                if (isInputValid()) {
+                    if (mNote == null) {
+                        mNote = new Note(mUser.getId(), editNote.getText().toString());
+                        mNote.setId(mSource.addNote(mNote));
+                        mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser), false);
+                    } else {
+                        mNote.setText(editNote.getText().toString());
+                        mNote.setDateEdited(System.currentTimeMillis());
+                        mSource.updateNote(mNote);
+                        mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser), false);
+                    }
+                } else
+                    Toast.makeText(getActivity(), "Note can't be empty!", Toast.LENGTH_SHORT).show();
             }
         });
 
         return rootView;
+    }
+
+    private boolean isInputValid() {
+        return !editNote.getText().toString().isEmpty();
     }
 }

@@ -32,7 +32,7 @@ public class NotesListFragment extends Fragment {
     private RecyclerView mNotesRecycler;
     private NotesRecyclerAdapter mNotesRecyclerAdapter;
 
-    private FloatingActionButton mFabPlus;
+    private FloatingActionButton mFabAdd;
 
     private Communicator mCommunicator;
 
@@ -48,7 +48,7 @@ public class NotesListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mCommunicator = (Communicator) getActivity();
         if (mNotesRecyclerAdapter != null) {
-            mNotesRecyclerAdapter.updateCommunicator(mCommunicator);
+            mNotesRecyclerAdapter.setCommunicator(mCommunicator);
         }
     }
 
@@ -65,11 +65,11 @@ public class NotesListFragment extends Fragment {
         mNotesRecyclerAdapter = new NotesRecyclerAdapter(mNotes, mUser);
         mNotesRecycler.setAdapter(mNotesRecyclerAdapter);
 
-        mFabPlus = rootView.findViewById(R.id.fab);
-        mFabPlus.setOnClickListener(new View.OnClickListener() {
+        mFabAdd = rootView.findViewById(R.id.fab);
+        mFabAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mCommunicator.replaceFragment(new EditNoteFragment().setUser(mUser));
+                mCommunicator.replaceFragment(new EditNoteFragment().setUser(mUser), true);
             }
         });
 
