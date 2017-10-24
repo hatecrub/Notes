@@ -15,10 +15,6 @@ import com.sakurov.notes.R;
 import com.sakurov.notes.entities.User;
 import com.sakurov.notes.helpers.DBSource;
 
-/**
- * Created by sakurov on 23.10.17.
- */
-
 public class AuthFragment extends Fragment {
 
     public final static int IN = 100;

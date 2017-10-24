@@ -11,15 +11,10 @@ import android.widget.Button;
 import com.sakurov.notes.Communicator;
 import com.sakurov.notes.R;
 
-/**
- * Created by sakurov on 23.10.17.
- */
-
 public class ChooseFragment extends Fragment implements View.OnClickListener {
 
     Button signIn, signUp;
     Communicator mCommunicator;
-
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -55,5 +50,4 @@ public class ChooseFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
-
 }

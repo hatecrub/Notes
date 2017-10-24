@@ -14,10 +14,6 @@ import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.User;
 
-/**
- * Created by sakurov on 23.10.17.
- */
-
 public class NoteFragment extends Fragment {
 
     private TextView text, author, created, edited;

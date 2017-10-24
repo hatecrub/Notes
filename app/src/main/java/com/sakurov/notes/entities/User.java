@@ -1,14 +1,16 @@
 package com.sakurov.notes.entities;
 
-/**
- * Created by sakurov on 23.10.17.
- */
-
 public class User {
 
     private long id;
     private final String name;
     private final String password;
+
+    public User(long id, String name, String password) {
+        this.id = id;
+        this.name = name;
+        this.password = password;
+    }
 
     public User(String name, String password) {
         this.name = name;

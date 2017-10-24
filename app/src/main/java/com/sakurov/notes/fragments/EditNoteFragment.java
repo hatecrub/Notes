@@ -16,10 +16,6 @@ import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.User;
 import com.sakurov.notes.helpers.DBSource;
 
-/**
- * Created by sakurov on 23.10.17.
- */
-
 public class EditNoteFragment extends Fragment {
 
     private EditText editNote;
@@ -71,7 +67,6 @@ public class EditNoteFragment extends Fragment {
                         mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser), false);
                     } else {
                         mNote.setText(editNote.getText().toString());
-                        mNote.setDateEdited(System.currentTimeMillis());
                         mSource.updateNote(mNote);
                         mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser), false);
                     }

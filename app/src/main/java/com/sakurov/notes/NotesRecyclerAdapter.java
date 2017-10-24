@@ -13,10 +13,6 @@ import com.sakurov.notes.fragments.NoteFragment;
 
 import java.util.List;
 
-/**
- * Created by sakurov on 23.10.17.
- */
-
 public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdapter.NoteViewHolder> {
 
     private List<Note> mNotes;
@@ -43,8 +39,8 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
         Note note = mNotes.get(position);
-        if (note.getText().length() > 50)
-            holder.text.setText(note.getText().substring(0, 46) + "...");
+        if (note.getText().length() > 60)
+            holder.text.setText(note.getText().substring(0, 56) + "...");
         else
             holder.text.setText(note.getText());
         holder.created.setText("Created " + note.getDateCreated());

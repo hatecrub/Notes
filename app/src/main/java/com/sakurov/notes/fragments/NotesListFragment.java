@@ -20,10 +20,6 @@ import com.sakurov.notes.helpers.DBSource;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by sakurov on 23.10.17.
- */
-
 public class NotesListFragment extends Fragment {
 
     private User mUser;

@@ -12,10 +12,6 @@ import com.sakurov.notes.entities.User;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by sakurov on 23.10.17.
- */
-
 public class DBSource {
 
     private DBHelper mHelper;
@@ -38,7 +34,6 @@ public class DBSource {
     private void close() {
         mHelper.close();
     }
-
 
     public boolean checkUser(User user) {
         read();
@@ -142,5 +137,4 @@ public class DBSource {
 
         close();
     }
-
 }

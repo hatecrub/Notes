@@ -1,13 +1,11 @@
 package com.sakurov.notes.entities;
 
-/**
- * Created by sakurov on 23.10.17.
- */
+import java.util.Date;
 
 public class Note {
 
     private long id;
-    private long userId;
+    private final long userId;
     private String text;
     private final String dateCreated;
     private String dateEdited;
@@ -23,33 +21,29 @@ public class Note {
     public Note(long userId, String text) {
         this.userId = userId;
         this.text = text;
-        this.dateCreated = String.valueOf(System.currentTimeMillis());
-        setDateEdited(System.currentTimeMillis());
+        this.dateCreated = new Date().toString();
+        this.dateEdited = this.dateCreated;
     }
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public void setText(String text) {
-        this.text = text;
-        setDateEdited(System.currentTimeMillis());
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setDateEdited(long dateEdited) {
-        this.dateEdited = String.valueOf(dateEdited);
-    }
-
     public long getId() {
         return id;
     }
 
+    public void setText(String text) {
+        this.text = text;
+        this.dateEdited = new Date().toString();
+    }
+
     public String getText() {
         return text;
+    }
+
+    public long getUserId() {
+        return userId;
     }
 
     public String getDateCreated() {

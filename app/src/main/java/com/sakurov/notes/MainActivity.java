@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity implements Communicator {
         mFragmentManager = getSupportFragmentManager();
 
         replaceFragment(new ChooseFragment(),true);
-
     }
 
     @Override
