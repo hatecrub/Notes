@@ -6,4 +6,5 @@ public interface Communicator {
 
     void replaceFragment(Fragment fragment, boolean addToBack);
 
+    void clearBackStack();
 }

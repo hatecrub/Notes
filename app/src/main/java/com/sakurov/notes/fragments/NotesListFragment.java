@@ -43,6 +43,7 @@ public class NotesListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mCommunicator = (Communicator) getActivity();
+//        mCommunicator.clearBackStack();
         if (mNotesRecyclerAdapter != null) {
             mNotesRecyclerAdapter.setCommunicator(mCommunicator);
         }
@@ -70,5 +71,12 @@ public class NotesListFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mNotes = mSource.getNotes(mUser);
+        mNotesRecyclerAdapter.updateList(mNotes);
     }
 }

@@ -7,4 +7,5 @@
     <string name="user_name">Name</string>
     <string name="password">Password</string>
     <string name="note">Note</string>
+    <string name="log_out">Log out</string>
 </resources>

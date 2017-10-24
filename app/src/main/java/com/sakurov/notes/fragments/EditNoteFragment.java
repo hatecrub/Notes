@@ -64,12 +64,11 @@ public class EditNoteFragment extends Fragment {
                     if (mNote == null) {
                         mNote = new Note(mUser.getId(), editNote.getText().toString());
                         mNote.setId(mSource.addNote(mNote));
-                        mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser), false);
                     } else {
                         mNote.setText(editNote.getText().toString());
                         mSource.updateNote(mNote);
-                        mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser), false);
                     }
+                    mCommunicator.replaceFragment(new NotesListFragment().setUser(mUser), false);
                 } else
                     Toast.makeText(getActivity(), "Note can't be empty!", Toast.LENGTH_SHORT).show();
             }

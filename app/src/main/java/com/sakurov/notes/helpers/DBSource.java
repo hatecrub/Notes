@@ -35,6 +35,24 @@ public class DBSource {
         mHelper.close();
     }
 
+    public long getUserId(User user) {
+        read();
+        Cursor cursor;
+        long id;
+        cursor = mDatabase.
+                rawQuery("SELECT " +
+                                DBHelper.ID +
+                                " FROM " +
+                                DBHelper.USERS +
+                                " WHERE " +
+                                DBHelper.NAME + "=?",
+                        new String[]{user.getName()});
+        cursor.moveToFirst();
+        id = cursor.getLong(cursor.getColumnIndex(DBHelper.ID));
+        cursor.close();
+        return id;
+    }
+
     public boolean checkUser(User user) {
         read();
         Cursor cursor = null;
@@ -81,26 +99,26 @@ public class DBSource {
     public List<Note> getNotes(User user) {
         List<Note> notes = new ArrayList<>();
         read();
-        Cursor c = mDatabase.query(DBHelper.NOTES, null,
+        Cursor cursor = mDatabase.query(DBHelper.NOTES, null,
                 DBHelper.USER_ID + "=?",
                 new String[]{"" + user.getId()},
                 null, null, null);
-        if (c.moveToFirst()) {
+        if (cursor.moveToFirst()) {
             do {
-                int idColIndex = c.getColumnIndex(DBHelper.ID);
-                int userIdColIndex = c.getColumnIndex(DBHelper.USER_ID);
-                int textColIndex = c.getColumnIndex(DBHelper.TEXT);
-                int createdColIndex = c.getColumnIndex(DBHelper.DATE_CREATED);
-                int editedColIndex = c.getColumnIndex(DBHelper.DATE_EDITED);
+                int idColIndex = cursor.getColumnIndex(DBHelper.ID);
+                int userIdColIndex = cursor.getColumnIndex(DBHelper.USER_ID);
+                int textColIndex = cursor.getColumnIndex(DBHelper.TEXT);
+                int createdColIndex = cursor.getColumnIndex(DBHelper.DATE_CREATED);
+                int editedColIndex = cursor.getColumnIndex(DBHelper.DATE_EDITED);
 
-                notes.add(new Note(c.getInt(idColIndex),
-                        c.getLong(userIdColIndex),
-                        c.getString(textColIndex),
-                        c.getString(createdColIndex),
-                        c.getString(editedColIndex)));
-            } while (c.moveToNext());
+                notes.add(new Note(cursor.getInt(idColIndex),
+                        cursor.getLong(userIdColIndex),
+                        cursor.getString(textColIndex),
+                        cursor.getString(createdColIndex),
+                        cursor.getString(editedColIndex)));
+            } while (cursor.moveToNext());
         } else {
-            c.close();
+            cursor.close();
         }
         close();
 

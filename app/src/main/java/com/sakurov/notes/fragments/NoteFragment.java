@@ -54,7 +54,7 @@ public class NoteFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (mCommunicator != null && mUser != null && mNote != null)
-                    mCommunicator.replaceFragment(new EditNoteFragment().setUser(mUser).setNote(mNote),true);
+                    mCommunicator.replaceFragment(new EditNoteFragment().setUser(mUser).setNote(mNote), true);
             }
         });
 

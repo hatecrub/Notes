@@ -69,8 +69,8 @@ public class AuthFragment extends Fragment {
                     switch (action) {
                         case IN: {
                             if (mSource.checkUser(user)) {
-                                Toast.makeText(getActivity(), "Go to Notes Fragment", Toast.LENGTH_SHORT).show();
-                                mCommunicator.replaceFragment(new NotesListFragment().setUser(user), true);
+                                user.setId(mSource.getUserId(user));
+                                mCommunicator.replaceFragment(new NotesListFragment().setUser(user), false);
                             } else {
                                 Toast.makeText(getActivity(), "User do not exist or password incorrect!", Toast.LENGTH_SHORT).show();
                             }
@@ -78,8 +78,7 @@ public class AuthFragment extends Fragment {
                         }
                         case UP: {
                             user.setId(mSource.addUser(user));
-                            Toast.makeText(getActivity(), "Go to Notes Fragment", Toast.LENGTH_SHORT).show();
-                            mCommunicator.replaceFragment(new NotesListFragment().setUser(user), true);
+                            mCommunicator.replaceFragment(new NotesListFragment().setUser(user), false);
                             break;
                         }
                     }
