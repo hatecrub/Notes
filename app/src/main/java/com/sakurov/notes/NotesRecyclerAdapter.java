@@ -33,17 +33,21 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
     }
 
     public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new NoteViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note, parent, false));
+        return new NoteViewHolder(LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.item_note, parent, false));
     }
 
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
         Note note = mNotes.get(position);
-        if (note.getText().length() > 60)
-            holder.text.setText(note.getText().substring(0, 56) + "...");
-        else
-            holder.text.setText(note.getText());
+        holder.text.setText(note.getText());
         holder.created.setText("Created " + note.getDateCreated());
+        holder.root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override

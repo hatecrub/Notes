@@ -1,8 +1,8 @@
 package com.sakurov.notes.fragments;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +70,7 @@ public class AuthFragment extends Fragment {
                         case IN: {
                             if (mSource.checkUser(user)) {
                                 user.setId(mSource.getUserId(user));
+                                mCommunicator.setUser(user);
                                 mCommunicator.replaceFragment(new NotesListFragment().setUser(user), false);
                             } else {
                                 Toast.makeText(getActivity(), "User do not exist or password incorrect!", Toast.LENGTH_SHORT).show();
@@ -78,6 +79,7 @@ public class AuthFragment extends Fragment {
                         }
                         case UP: {
                             user.setId(mSource.addUser(user));
+                            mCommunicator.setUser(user);
                             mCommunicator.replaceFragment(new NotesListFragment().setUser(user), false);
                             break;
                         }
