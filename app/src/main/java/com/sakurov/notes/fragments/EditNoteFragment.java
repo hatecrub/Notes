@@ -65,8 +65,10 @@ public class EditNoteFragment extends BaseFragment {
         readBundle(getArguments());
 
         if (mNote != null) {
+            FRAGMENT_TITLE = "Edit note";
             mEditNote.setText(mNote.getText());
-        }
+        } else
+            FRAGMENT_TITLE = "New note";
 
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -52,6 +52,7 @@ public class AuthFragment extends BaseFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        FRAGMENT_TITLE = "Authentication";
         super.onActivityCreated(savedInstanceState);
         mSource = new DBSource(getActivity());
     }
@@ -86,14 +87,17 @@ public class AuthFragment extends BaseFragment {
                             mUserPassword.getText().toString());
 
                     SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-                    preferences.edit().putBoolean(IS_USER, mRememberCheck.isChecked()).apply();
 
                     if (mRememberCheck.isChecked()) {
                         preferences.edit()
                                 .putString(USER_NAME, user.getName())
                                 .putString(USER_PASS, user.getPassword())
                                 .apply();
+                    } else {
+                        preferences.edit().clear().apply();
                     }
+
+                    preferences.edit().putBoolean(IS_USER, mRememberCheck.isChecked()).apply();
 
                     switch (mAction) {
                         case IN: {

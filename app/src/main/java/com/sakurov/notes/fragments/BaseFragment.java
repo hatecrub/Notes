@@ -11,12 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sakurov.notes.MainActivity;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.User;
 import com.sakurov.notes.helpers.DBSource;
 
 abstract class BaseFragment extends Fragment {
+
+    protected String FRAGMENT_TITLE = "Notes";
 
     protected static final String USER = "user";
     protected static final String NOTE = "note";
@@ -48,7 +51,14 @@ abstract class BaseFragment extends Fragment {
         replaceFragment(fragment, false);
     }
 
-/*    @Override
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setActionBarTitle(FRAGMENT_TITLE);
+    }
+
+    /*    @Override
     public void onResume() {
         super.onResume();
         Log.d(this.getClass().getSimpleName(),

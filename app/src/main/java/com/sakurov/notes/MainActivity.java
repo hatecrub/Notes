@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -28,25 +29,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mPreferences = getPreferences(Context.MODE_PRIVATE);
-        boolean isUser = mPreferences.getBoolean(AuthFragment.IS_USER, false);
+        if (savedInstanceState == null) {
+            mPreferences = getPreferences(Context.MODE_PRIVATE);
+            boolean isUser = mPreferences.getBoolean(AuthFragment.IS_USER, false);
 
-        if (isUser) {
-            User user = new User(mPreferences.getString(AuthFragment.USER_NAME, null),
-                    mPreferences.getString(AuthFragment.USER_PASS, null));
+            if (isUser) {
+                User user = new User(mPreferences.getString(AuthFragment.USER_NAME, null),
+                        mPreferences.getString(AuthFragment.USER_PASS, null));
 
-            DBSource dbSource = new DBSource(this);
+                DBSource dbSource = new DBSource(this);
 
-            if (dbSource.checkUser(user)) {
-                user.setId(dbSource.getUserId(user));
-                addAsRootFragment(NotesListFragment.newInstance(user));
+                if (dbSource.checkUser(user)) {
+                    user.setId(dbSource.getUserId(user));
+                    addAsRootFragment(NotesListFragment.newInstance(user));
+                } else {
+                    Toast.makeText(this, getString(R.string.user_dont_exist), Toast.LENGTH_SHORT).show();
+                    addAsRootFragment(ChooseFragment.newInstance());
+                }
+
             } else {
-                Toast.makeText(this, getString(R.string.user_dont_exist), Toast.LENGTH_SHORT).show();
                 addAsRootFragment(ChooseFragment.newInstance());
             }
-            
-        } else {
-            addAsRootFragment(ChooseFragment.newInstance());
         }
     }
 
@@ -71,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.log_out) {
             if (mLogOffEnabled) {
-                mPreferences.edit().clear().apply();
+                getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
                 addAsRootFragment(ChooseFragment.newInstance());
             }
         }
@@ -91,5 +94,19 @@ public class MainActivity extends AppCompatActivity {
 
     public void setLogOffEnabled(boolean flag) {
         mLogOffEnabled = flag;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("orientation", true);
+    }
+
+    public void setActionBarTitle(String title) {
+        try {
+            getSupportActionBar().setTitle(title);
+        } catch (NullPointerException e) {
+            Log.d(this.getClass().getSimpleName(), "No ActionBar to set title!");
+        }
     }
 }

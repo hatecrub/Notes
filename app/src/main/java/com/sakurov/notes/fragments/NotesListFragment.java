@@ -45,6 +45,8 @@ public class NotesListFragment extends BaseFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        FRAGMENT_TITLE = "My notes";
+
         super.onActivityCreated(savedInstanceState);
         mSource = new DBSource(getActivity());
         mNotes = mSource.getNotes(mUser.getId());
