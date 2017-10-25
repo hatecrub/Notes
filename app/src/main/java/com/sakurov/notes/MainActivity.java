@@ -13,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
 //    private long mTimer;
 
+    private boolean mLogOffEnabled = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,17 +43,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.log_out) {
-            addAsRootFragment(ChooseFragment.newInstance());
+            if (mLogOffEnabled)
+                addAsRootFragment(ChooseFragment.newInstance());
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void addAsRootFragment(Fragment fragment) {
+        setLogOffEnabled(false);
+
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
+    }
+
+    public void setLogOffEnabled(boolean flag) {
+        mLogOffEnabled = flag;
     }
 }

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sakurov.notes.MainActivity;
 import com.sakurov.notes.NotesRecyclerAdapter;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
@@ -48,6 +49,9 @@ public class NotesListFragment extends BaseFragment {
         mSource = new DBSource(getActivity());
         mNotes = mSource.getNotes(mUser.getId());
         mNotesRecyclerAdapter.updateList(mNotes);
+
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setLogOffEnabled(true);
     }
 
     @Nullable
