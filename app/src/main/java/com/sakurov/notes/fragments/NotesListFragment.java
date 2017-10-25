@@ -1,5 +1,7 @@
 package com.sakurov.notes.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +23,7 @@ import java.util.List;
 
 public class NotesListFragment extends BaseFragment {
 
+    public static final int ADD_NOTE_REQUEST = 800;
     private List<Note> mNotes = new ArrayList<>();
 
     private NotesRecyclerAdapter mNotesRecyclerAdapter;
@@ -73,17 +76,27 @@ public class NotesListFragment extends BaseFragment {
         fabAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                replaceFragment(EditNoteFragment.newInstance(mUser), true);
+                EditNoteDialogFragment fragment = EditNoteDialogFragment.newInstance(mUser);
+                fragment.setTargetFragment(NotesListFragment.this, ADD_NOTE_REQUEST);
+                fragment.show(getFragmentManager(), EditNoteDialogFragment.class.getSimpleName());
             }
         });
 
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private void notifyDataSetChanged() {
         mNotes = mSource.getNotes(mUser.getId());
         mNotesRecyclerAdapter.updateList(mNotes);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == ADD_NOTE_REQUEST) {
+                notifyDataSetChanged();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

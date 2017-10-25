@@ -155,4 +155,27 @@ public class DBSource {
 
         close();
     }
+
+    public Note getNote(long noteId) {
+        read();
+        Cursor cursor;
+        Note note;
+        cursor = mDatabase.
+                rawQuery("SELECT " +
+                                "*" +
+                                " FROM " +
+                                DBHelper.NOTES +
+                                " WHERE " +
+                                DBHelper.ID + "=?",
+                        new String[]{"" + noteId});
+        cursor.moveToFirst();
+        note = new Note(cursor.getLong(cursor.getColumnIndex(DBHelper.ID)),
+                cursor.getLong(cursor.getColumnIndex(DBHelper.USER_ID)),
+                cursor.getString(cursor.getColumnIndex(DBHelper.TEXT)),
+                cursor.getString(cursor.getColumnIndex(DBHelper.DATE_CREATED)),
+                cursor.getString(cursor.getColumnIndex(DBHelper.DATE_EDITED)));
+        cursor.close();
+
+        return note;
+    }
 }

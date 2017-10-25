@@ -23,6 +23,7 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
     public void updateList(List<Note> notes) {
         this.mNotes = notes;
+        notifyDataSetChanged();
     }
 
     public NotesRecyclerAdapter(FragmentManager fragmentManager, User user) {
@@ -61,14 +62,14 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d("Adapter", "BackStackCountBefore: " + mFragmentManager.getBackStackEntryCount());
+//                    Log.d("Adapter", "Note: " + mNotes.get(getAdapterPosition()).getId());
                     mFragmentManager
                             .beginTransaction()
                             .replace(R.id.container,
                                     NoteFragment.newInstance(mUser, mNotes.get(getAdapterPosition())))
                             .addToBackStack(NoteFragment.class.getSimpleName())
                             .commit();
-                    Log.d("Adapter", "BackStackCountAfter: " + mFragmentManager.getBackStackEntryCount());
+//                    Log.d("Adapter", "BackStackCountAfter: " + mFragmentManager.getBackStackEntryCount());
                 }
             });
         }

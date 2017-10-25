@@ -1,8 +1,12 @@
 package com.sakurov.notes.fragments;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +17,10 @@ import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.User;
 
 public class NoteFragment extends BaseFragment {
+
+    public static final int EDIT_NOTE_REQUEST = 700;
+
+    private TextView noteText, noteAuthor, noteDateCreated, noteDateEdited;
 
     public static NoteFragment newInstance(User user, Note note) {
 
@@ -42,10 +50,11 @@ public class NoteFragment extends BaseFragment {
 
         View rootView = inflater.inflate(R.layout.fragment_note, container, false);
 
-        TextView noteText = rootView.findViewById(R.id.text);
-        TextView noteAuthor = rootView.findViewById(R.id.author);
-        TextView noteDateCreated = rootView.findViewById(R.id.created);
-        TextView noteDateEdited = rootView.findViewById(R.id.edited);
+        noteText = rootView.findViewById(R.id.text);
+        noteAuthor = rootView.findViewById(R.id.author);
+        noteDateCreated = rootView.findViewById(R.id.created);
+        noteDateEdited = rootView.findViewById(R.id.edited);
+
         FloatingActionButton fabEditNote = rootView.findViewById(R.id.fab_edit);
 
         readBundle(getArguments());
@@ -54,15 +63,33 @@ public class NoteFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if (mNote != null) {
-                    replaceFragment(EditNoteFragment.newInstance(mNote), true);
+                    EditNoteDialogFragment fragment = EditNoteDialogFragment.newInstance(mNote);
+                    fragment.setTargetFragment(NoteFragment.this, EDIT_NOTE_REQUEST);
+                    fragment.show(getFragmentManager(), EditNoteDialogFragment.class.getSimpleName());
                 }
             }
         });
 
+        setTextViews();
+        return rootView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == EDIT_NOTE_REQUEST) {
+                mNote = data.getParcelableExtra(NOTE);
+                if (getActivity() != null)
+                    setTextViews();
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void setTextViews() {
         noteText.setText(mNote.getText());
         noteAuthor.setText(String.format("%s%s", getString(R.string.author), mUser.getName()));
         noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
-        noteDateEdited.setText("Edited: " + mNote.getDateEdited());
-        return rootView;
+        noteDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNote.getDateEdited()));
     }
 }

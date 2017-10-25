@@ -32,10 +32,10 @@ abstract class BaseFragment extends Fragment {
     abstract protected void readBundle(Bundle bundle);
 
     void replaceFragment(Fragment fragment, boolean addToBackStack) {
-        Log.d(this.getClass().getSimpleName(),
-                "OnReplaceFragment to " +
-                        fragment.getClass().getSimpleName() + ": " +
-                        getFragmentManager().getBackStackEntryCount());
+//        Log.d(this.getClass().getSimpleName(),
+//                "OnReplaceFragment to " +
+//                        fragment.getClass().getSimpleName() + ": " +
+//                        getFragmentManager().getBackStackEntryCount());
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
@@ -56,9 +56,13 @@ abstract class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(FRAGMENT_TITLE);
+
+//        Log.d(this.getClass().getSimpleName(),
+//                "OnActivityCreated: " +
+//                        getFragmentManager().getBackStackEntryCount());
     }
 
-    /*    @Override
+/*    @Override
     public void onResume() {
         super.onResume();
         Log.d(this.getClass().getSimpleName(),
@@ -121,14 +125,6 @@ abstract class BaseFragment extends Fragment {
                 "OnCreateView: " +
                         getFragmentManager().getBackStackEntryCount());
         return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(this.getClass().getSimpleName(),
-                "OnActivityCreated: " +
-                        getFragmentManager().getBackStackEntryCount());
     }
 
     @Override
