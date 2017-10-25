@@ -19,7 +19,6 @@ import com.sakurov.notes.helpers.DBSource;
 
 public class MainActivity extends AppCompatActivity {
 
-    //    private long mTimer;
     SharedPreferences mPreferences;
 
     private boolean mLogOffEnabled = false;
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             mPreferences = getPreferences(Context.MODE_PRIVATE);
-            boolean isUser = mPreferences.getBoolean(AuthFragment.IS_USER, false);
+            boolean isUser = mPreferences.getBoolean(AuthFragment.IS_USER_REMEMBERED, false);
 
             if (isUser) {
                 User user = new User(mPreferences.getString(AuthFragment.USER_NAME, null),
@@ -41,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (dbSource.checkUser(user)) {
                     user.setId(dbSource.getUserId(user));
-                    addAsRootFragment(NotesListFragment.newInstance(user));
+                    addAsRootFragment(NotesListFragment.newInstance());
                 } else {
                     Toast.makeText(this, getString(R.string.user_dont_exist), Toast.LENGTH_SHORT).show();
                     addAsRootFragment(ChooseFragment.newInstance());
@@ -55,12 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        if (getFragmentManager().getBackStackEntryCount() > 0) {
-//            super.onBackPressed();
-//        } else if (System.currentTimeMillis() - mTimer > 1000) {
-//            mTimer = System.currentTimeMillis();
-//            Toast.makeText(this, "Click again to exit", Toast.LENGTH_SHORT).show();
-//        } else
         super.onBackPressed();
     }
 

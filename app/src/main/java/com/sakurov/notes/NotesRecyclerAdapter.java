@@ -2,7 +2,6 @@ package com.sakurov.notes;
 
 import android.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sakurov.notes.entities.Note;
-import com.sakurov.notes.entities.User;
 import com.sakurov.notes.fragments.NoteFragment;
 
 import java.util.List;
@@ -19,16 +17,14 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
 
     private List<Note> mNotes;
     private FragmentManager mFragmentManager;
-    private User mUser;
+
+    public NotesRecyclerAdapter(FragmentManager fragmentManager) {
+        this.mFragmentManager = fragmentManager;
+    }
 
     public void updateList(List<Note> notes) {
         this.mNotes = notes;
         notifyDataSetChanged();
-    }
-
-    public NotesRecyclerAdapter(FragmentManager fragmentManager, User user) {
-        this.mFragmentManager = fragmentManager;
-        this.mUser = user;
     }
 
     public NoteViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -48,6 +44,8 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
         return mNotes != null ? mNotes.size() : 0;
     }
 
+//---------------------------------------VIEW HOLDER------------------------------------------------
+
     class NoteViewHolder extends RecyclerView.ViewHolder {
         LinearLayout rootView;
         TextView noteText;
@@ -62,16 +60,18 @@ public class NotesRecyclerAdapter extends RecyclerView.Adapter<NotesRecyclerAdap
             rootView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    Log.d("Adapter", "Note: " + mNotes.get(getAdapterPosition()).getId());
-                    mFragmentManager
-                            .beginTransaction()
-                            .replace(R.id.container,
-                                    NoteFragment.newInstance(mUser, mNotes.get(getAdapterPosition())))
-                            .addToBackStack(NoteFragment.class.getSimpleName())
-                            .commit();
-//                    Log.d("Adapter", "BackStackCountAfter: " + mFragmentManager.getBackStackEntryCount());
+                    replaceFragment(getAdapterPosition());
                 }
             });
+        }
+
+        private void replaceFragment(int position) {
+            mFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.container,
+                            NoteFragment.newInstance(mNotes.get(position)))
+                    .addToBackStack(NoteFragment.class.getSimpleName())
+                    .commit();
         }
     }
 }

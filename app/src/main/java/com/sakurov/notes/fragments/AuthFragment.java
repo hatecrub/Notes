@@ -1,7 +1,6 @@
 package com.sakurov.notes.fragments;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -18,15 +17,17 @@ import com.sakurov.notes.helpers.DBSource;
 
 public class AuthFragment extends BaseFragment {
 
+    public static final String USER_ID = "user_id";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_PASS = "user_pass";
+    public static final String IS_USER_REMEMBERED = "is_user_remembered";
+
     final static int IN = 100;
     final static int UP = 200;
 
     private final static String ACTION = "action";
 
-    public static final String USER_NAME = "user_name";
-    public static final String USER_PASS = "user_pass";
-    public static final String IS_USER = "is_user";
-
+    private DBSource mSource;
     private EditText mUserName, mUserPassword;
     private CheckBox mRememberCheck;
 
@@ -43,8 +44,7 @@ public class AuthFragment extends BaseFragment {
         return fragment;
     }
 
-    @Override
-    protected void readBundle(Bundle bundle) {
+    private void readBundle(Bundle bundle) {
         if (bundle != null) {
             mAction = bundle.getInt(ACTION);
         }
@@ -86,24 +86,12 @@ public class AuthFragment extends BaseFragment {
                     User user = new User(mUserName.getText().toString(),
                             mUserPassword.getText().toString());
 
-                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-                    if (mRememberCheck.isChecked()) {
-                        preferences.edit()
-                                .putString(USER_NAME, user.getName())
-                                .putString(USER_PASS, user.getPassword())
-                                .apply();
-                    } else {
-                        preferences.edit().clear().apply();
-                    }
-
-                    preferences.edit().putBoolean(IS_USER, mRememberCheck.isChecked()).apply();
-
                     switch (mAction) {
                         case IN: {
                             if (mSource.checkUser(user)) {
                                 user.setId(mSource.getUserId(user));
-                                addAsRootFragment(NotesListFragment.newInstance(user));
+                                addUserToPreferences(user);
+                                addAsRootFragment(NotesListFragment.newInstance());
                             } else {
                                 Toast.makeText(getActivity(),
                                         R.string.user_dont_exist,
@@ -114,7 +102,8 @@ public class AuthFragment extends BaseFragment {
                         }
                         case UP: {
                             user.setId(mSource.addUser(user));
-                            addAsRootFragment(NotesListFragment.newInstance(user));
+                            addUserToPreferences(user);
+                            addAsRootFragment(NotesListFragment.newInstance());
                             break;
                         }
                     }
@@ -129,5 +118,17 @@ public class AuthFragment extends BaseFragment {
 
     private boolean isInputValid() {
         return !(mUserName.getText().toString().isEmpty() || mUserPassword.getText().toString().isEmpty());
+    }
+
+    private void addUserToPreferences(User user) {
+        if (getActivity() != null) {
+            getActivity().getPreferences(Context.MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(IS_USER_REMEMBERED, mRememberCheck.isChecked())
+                    .putLong(USER_ID, user.getId())
+                    .putString(USER_NAME, user.getName())
+                    .putString(USER_PASS, user.getPassword())
+                    .apply();
+        }
     }
 }

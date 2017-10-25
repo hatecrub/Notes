@@ -2,6 +2,7 @@ package com.sakurov.notes.fragments;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,31 +17,22 @@ import android.widget.Toast;
 
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
-import com.sakurov.notes.entities.User;
 import com.sakurov.notes.helpers.DBSource;
 
-import static com.sakurov.notes.fragments.BaseFragment.NOTE;
-import static com.sakurov.notes.fragments.BaseFragment.USER;
+import static com.sakurov.notes.fragments.AuthFragment.USER_ID;
 
 public class EditNoteDialogFragment extends DialogFragment {
 
-    private String FRAGMENT_TITLE = "Notes";
+    private static final String NOTE = "note";
+
     private EditText mEditNote;
     private Note mNote;
-    private User mUser;
     private DBSource mSource;
 
     private int mRequest;
 
-    public static EditNoteDialogFragment newInstance(User user) {
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(USER, user);
-
-        EditNoteDialogFragment fragment = new EditNoteDialogFragment();
-        fragment.setArguments(bundle);
-
-        return fragment;
+    public static EditNoteDialogFragment newInstance() {
+        return new EditNoteDialogFragment();
     }
 
     public static EditNoteDialogFragment newInstance(Note note) {
@@ -57,7 +49,6 @@ public class EditNoteDialogFragment extends DialogFragment {
     protected void readBundle(Bundle bundle) {
         if (bundle != null) {
             mNote = bundle.getParcelable(NOTE);
-            mUser = bundle.getParcelable(USER);
         }
     }
 
@@ -78,6 +69,7 @@ public class EditNoteDialogFragment extends DialogFragment {
 
         readBundle(getArguments());
 
+        String FRAGMENT_TITLE;
         if (mNote != null) {
             FRAGMENT_TITLE = "Edit note";
             mRequest = NoteFragment.EDIT_NOTE_REQUEST;
@@ -96,7 +88,8 @@ public class EditNoteDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 if (isInputValid()) {
                     if (mNote == null) {
-                        mNote = new Note(mUser.getId(), mEditNote.getText().toString());
+                        mNote = new Note(getActivity().getPreferences(Context.MODE_PRIVATE).getLong(USER_ID, 0),
+                                mEditNote.getText().toString());
                         mNote.setId(mSource.addNote(mNote));
                     } else {
                         mNote.setText(mEditNote.getText().toString());

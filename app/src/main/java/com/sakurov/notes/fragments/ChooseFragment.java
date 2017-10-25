@@ -15,10 +15,6 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         return new ChooseFragment();
     }
 
-    @Override
-    protected void readBundle(Bundle bundle) {
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

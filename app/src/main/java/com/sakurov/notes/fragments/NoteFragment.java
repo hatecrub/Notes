@@ -1,12 +1,10 @@
 package com.sakurov.notes.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +12,19 @@ import android.widget.TextView;
 
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
-import com.sakurov.notes.entities.User;
 
 public class NoteFragment extends BaseFragment {
 
-    public static final int EDIT_NOTE_REQUEST = 700;
+    static final int EDIT_NOTE_REQUEST = 700;
 
+    private static final String NOTE = "note";
+
+    private Note mNote;
     private TextView noteText, noteAuthor, noteDateCreated, noteDateEdited;
 
-    public static NoteFragment newInstance(User user, Note note) {
+    public static NoteFragment newInstance(Note note) {
 
         Bundle bundle = new Bundle();
-        bundle.putParcelable(USER, user);
         bundle.putParcelable(NOTE, note);
 
         NoteFragment fragment = new NoteFragment();
@@ -34,11 +33,9 @@ public class NoteFragment extends BaseFragment {
         return fragment;
     }
 
-    @Override
     protected void readBundle(Bundle bundle) {
         if (bundle != null) {
             mNote = bundle.getParcelable(NOTE);
-            mUser = bundle.getParcelable(USER);
         }
     }
 
@@ -88,7 +85,8 @@ public class NoteFragment extends BaseFragment {
 
     private void setTextViews() {
         noteText.setText(mNote.getText());
-        noteAuthor.setText(String.format("%s%s", getString(R.string.author), mUser.getName()));
+        noteAuthor.setText(String.format("%s%s", getString(R.string.author),
+                getCurrentUserName(getActivity())));
         noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
         noteDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNote.getDateEdited()));
     }

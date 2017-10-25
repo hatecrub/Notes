@@ -15,7 +15,6 @@ import com.sakurov.notes.MainActivity;
 import com.sakurov.notes.NotesRecyclerAdapter;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
-import com.sakurov.notes.entities.User;
 import com.sakurov.notes.helpers.DBSource;
 
 import java.util.ArrayList;
@@ -24,39 +23,25 @@ import java.util.List;
 public class NotesListFragment extends BaseFragment {
 
     public static final int ADD_NOTE_REQUEST = 800;
+
     private List<Note> mNotes = new ArrayList<>();
-
     private NotesRecyclerAdapter mNotesRecyclerAdapter;
+    private DBSource mSource;
 
-    public static NotesListFragment newInstance(User user) {
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable(USER, user);
-
-        NotesListFragment fragment = new NotesListFragment();
-        fragment.setArguments(bundle);
-
-        return fragment;
-    }
-
-    @Override
-    protected void readBundle(Bundle bundle) {
-        if (bundle != null) {
-            mUser = bundle.getParcelable(USER);
-        }
+    public static NotesListFragment newInstance() {
+        return new NotesListFragment();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         FRAGMENT_TITLE = "My notes";
-
         super.onActivityCreated(savedInstanceState);
+
         mSource = new DBSource(getActivity());
-        mNotes = mSource.getNotes(mUser.getId());
+        mNotes = mSource.getNotes(getCurrentUserId(getActivity()));
         mNotesRecyclerAdapter.updateList(mNotes);
 
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.setLogOffEnabled(true);
+        enableLogOutMenuItem();
     }
 
     @Nullable
@@ -67,16 +52,14 @@ public class NotesListFragment extends BaseFragment {
         RecyclerView notesRecycler = rootView.findViewById(R.id.notes_list);
         notesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        readBundle(getArguments());
-
-        mNotesRecyclerAdapter = new NotesRecyclerAdapter(getFragmentManager(), mUser);
+        mNotesRecyclerAdapter = new NotesRecyclerAdapter(getFragmentManager());
         notesRecycler.setAdapter(mNotesRecyclerAdapter);
 
         FloatingActionButton fabAddNote = rootView.findViewById(R.id.fab);
         fabAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditNoteDialogFragment fragment = EditNoteDialogFragment.newInstance(mUser);
+                EditNoteDialogFragment fragment = EditNoteDialogFragment.newInstance();
                 fragment.setTargetFragment(NotesListFragment.this, ADD_NOTE_REQUEST);
                 fragment.show(getFragmentManager(), EditNoteDialogFragment.class.getSimpleName());
             }
@@ -85,18 +68,25 @@ public class NotesListFragment extends BaseFragment {
         return rootView;
     }
 
-    private void notifyDataSetChanged() {
-        mNotes = mSource.getNotes(mUser.getId());
-        mNotesRecyclerAdapter.updateList(mNotes);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ADD_NOTE_REQUEST) {
-                notifyDataSetChanged();
+                updateRecycler();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void updateRecycler() {
+        if (getActivity() != null) {
+            mNotes = mSource.getNotes(getCurrentUserId(getActivity()));
+            mNotesRecyclerAdapter.updateList(mNotes);
+        }
+    }
+
+    private void enableLogOutMenuItem() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setLogOffEnabled(true);
     }
 }
