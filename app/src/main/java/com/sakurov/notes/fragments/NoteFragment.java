@@ -14,12 +14,6 @@ import com.sakurov.notes.entities.User;
 
 public class NoteFragment extends BaseFragment {
 
-    private static final String USER = "user";
-    private static final String NOTE = "note";
-
-    private Note mNote;
-    private User mUser;
-
     public static NoteFragment newInstance(User user, Note note) {
 
         Bundle bundle = new Bundle();
@@ -63,8 +57,8 @@ public class NoteFragment extends BaseFragment {
         });
 
         noteText.setText(mNote.getText());
-        noteAuthor.setText("Author: " + mUser.getName());
-        noteDateCreated.setText("Created: " + mNote.getDateCreated());
+        noteAuthor.setText(String.format("%s%s", getString(R.string.author), mUser.getName()));
+        noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
         noteDateEdited.setText("Edited: " + mNote.getDateEdited());
         return rootView;
     }

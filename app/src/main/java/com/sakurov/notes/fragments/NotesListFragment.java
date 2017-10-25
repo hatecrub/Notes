@@ -1,6 +1,5 @@
 package com.sakurov.notes.fragments;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,14 +20,9 @@ import java.util.List;
 
 public class NotesListFragment extends BaseFragment {
 
-    private final static String USER = "user";
-
-    private User mUser;
     private List<Note> mNotes = new ArrayList<>();
 
     private NotesRecyclerAdapter mNotesRecyclerAdapter;
-
-    private DBSource mSource;
 
     public static NotesListFragment newInstance(User user) {
 
@@ -46,12 +40,6 @@ public class NotesListFragment extends BaseFragment {
         if (bundle != null) {
             mUser = bundle.getParcelable(USER);
         }
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getFragmentManager().popBackStack(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
 
     @Override

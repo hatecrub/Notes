@@ -16,15 +16,7 @@ import com.sakurov.notes.helpers.DBSource;
 
 public class EditNoteFragment extends BaseFragment {
 
-    private static final String NOTE = "note";
-    private final static String USER = "user";
-
     private EditText mEditNote;
-
-    private DBSource mSource;
-
-    private Note mNote;
-    private User mUser;
 
     public static EditNoteFragment newInstance(User user) {
 
@@ -89,7 +81,7 @@ public class EditNoteFragment extends BaseFragment {
                     }
                     getFragmentManager().popBackStack();
                 } else
-                    Toast.makeText(getActivity(), "Note can't be empty!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.empty_note, Toast.LENGTH_SHORT).show();
             }
         });
 

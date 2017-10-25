@@ -15,14 +15,14 @@ import com.sakurov.notes.helpers.DBSource;
 
 public class AuthFragment extends BaseFragment {
 
+    final static int IN = 100;
+    final static int UP = 200;
+
     private final static String ACTION = "action";
 
-    public final static int IN = 100;
-    public final static int UP = 200;
-
     private EditText mUserName, mUserPassword;
-    private DBSource mSource;
-    private int action;
+
+    private int mAction;
 
     public static AuthFragment newInstance(int action) {
 
@@ -38,7 +38,7 @@ public class AuthFragment extends BaseFragment {
     @Override
     protected void readBundle(Bundle bundle) {
         if (bundle != null) {
-            action = bundle.getInt(ACTION);
+            mAction = bundle.getInt(ACTION);
         }
     }
 
@@ -58,7 +58,7 @@ public class AuthFragment extends BaseFragment {
 
         readBundle(getArguments());
 
-        switch (action) {
+        switch (mAction) {
             case IN: {
                 actionButton.setText(getString(R.string.sign_in));
                 break;
@@ -75,11 +75,11 @@ public class AuthFragment extends BaseFragment {
                 if (isInputValid()) {
                     User user = new User(mUserName.getText().toString(),
                             mUserPassword.getText().toString());
-                    switch (action) {
+                    switch (mAction) {
                         case IN: {
                             if (mSource.checkUser(user)) {
                                 user.setId(mSource.getUserId(user));
-                                replaceFragment(NotesListFragment.newInstance(user), false);
+                                addAsRootFragment(NotesListFragment.newInstance(user));
                             } else {
                                 Toast.makeText(getActivity(),
                                         "User do not exist or password is incorrect!",
@@ -90,7 +90,7 @@ public class AuthFragment extends BaseFragment {
                         }
                         case UP: {
                             user.setId(mSource.addUser(user));
-                            replaceFragment(NotesListFragment.newInstance(user), false);
+                            addAsRootFragment(NotesListFragment.newInstance(user));
                             break;
                         }
                     }

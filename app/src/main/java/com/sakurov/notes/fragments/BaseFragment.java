@@ -1,6 +1,7 @@
 package com.sakurov.notes.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,12 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sakurov.notes.R;
-
-/**
- * Created by sakurov on 24.10.17.
- */
+import com.sakurov.notes.entities.Note;
+import com.sakurov.notes.entities.User;
+import com.sakurov.notes.helpers.DBSource;
 
 abstract class BaseFragment extends Fragment {
+
+    protected static final String USER = "user";
+    protected static final String NOTE = "note";
+
+    protected Note mNote;
+    protected User mUser;
+
+    protected DBSource mSource;
 
     abstract protected void readBundle(Bundle bundle);
 
@@ -27,18 +35,20 @@ abstract class BaseFragment extends Fragment {
                         getFragmentManager().getBackStackEntryCount());
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        if (getFragmentManager().findFragmentById(R.id.container) != null)
-            transaction.replace(R.id.container, fragment);
-        else
-            transaction.add(R.id.container, fragment);
-
+        transaction.replace(R.id.container, fragment);
         if (addToBackStack)
             transaction.addToBackStack(fragment.getClass().getSimpleName());
-
         transaction.commit();
     }
 
-    @Override
+    public void addAsRootFragment(Fragment fragment) {
+
+        getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        replaceFragment(fragment, false);
+    }
+
+/*    @Override
     public void onResume() {
         super.onResume();
         Log.d(this.getClass().getSimpleName(),
@@ -125,5 +135,5 @@ abstract class BaseFragment extends Fragment {
         Log.d(this.getClass().getSimpleName(),
                 "OnDestroyView: " +
                         getFragmentManager().getBackStackEntryCount());
-    }
+    }*/
 }
