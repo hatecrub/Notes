@@ -1,11 +1,14 @@
 package com.sakurov.notes.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,7 +23,12 @@ public class AuthFragment extends BaseFragment {
 
     private final static String ACTION = "action";
 
+    public static final String USER_NAME = "user_name";
+    public static final String USER_PASS = "user_pass";
+    public static final String IS_USER = "is_user";
+
     private EditText mUserName, mUserPassword;
+    private CheckBox mRememberCheck;
 
     private int mAction;
 
@@ -54,6 +62,7 @@ public class AuthFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_auth, container, false);
         mUserName = rootView.findViewById(R.id.name);
         mUserPassword = rootView.findViewById(R.id.password);
+        mRememberCheck = rootView.findViewById(R.id.remember);
         Button actionButton = rootView.findViewById(R.id.action);
 
         readBundle(getArguments());
@@ -75,6 +84,17 @@ public class AuthFragment extends BaseFragment {
                 if (isInputValid()) {
                     User user = new User(mUserName.getText().toString(),
                             mUserPassword.getText().toString());
+
+                    SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+                    preferences.edit().putBoolean(IS_USER, mRememberCheck.isChecked()).apply();
+
+                    if (mRememberCheck.isChecked()) {
+                        preferences.edit()
+                                .putString(USER_NAME, user.getName())
+                                .putString(USER_PASS, user.getPassword())
+                                .apply();
+                    }
+
                     switch (mAction) {
                         case IN: {
                             if (mSource.checkUser(user)) {
@@ -82,7 +102,7 @@ public class AuthFragment extends BaseFragment {
                                 addAsRootFragment(NotesListFragment.newInstance(user));
                             } else {
                                 Toast.makeText(getActivity(),
-                                        "User do not exist or password is incorrect!",
+                                        R.string.user_dont_exist,
                                         Toast.LENGTH_SHORT)
                                         .show();
                             }
@@ -95,7 +115,7 @@ public class AuthFragment extends BaseFragment {
                         }
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Fill all fields, please!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.field_empty, Toast.LENGTH_SHORT).show();
                 }
 
             }
