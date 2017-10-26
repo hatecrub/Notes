@@ -14,4 +14,5 @@
     <string name="user_dont_exist">User do not exist or password is incorrect!</string>
     <string name="field_empty">Fill all fields, please!</string>
     <string name="edited">Last edited:\t</string>
+    <string name="notification">Notification</string>
 </resources>

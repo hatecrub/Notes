@@ -52,7 +52,8 @@ public class NotesListFragment extends BaseFragment {
         fabAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                replaceFragment(EditNoteFragment.newInstance(), true);
+//                replaceFragment(EditNoteFragment.newInstance(), true);
+                replaceFragment(new ViewPagerFragment(), true);
             }
         });
 
