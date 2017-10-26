@@ -25,8 +25,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mPrefsManager = PrefsManager.getInstance();
+
         if (savedInstanceState == null) {
-            mPrefsManager = PrefsManager.getInstance();
 
             if (mPrefsManager.isUserRemembered()) {
                 User user = mPrefsManager.getCurrentUser();

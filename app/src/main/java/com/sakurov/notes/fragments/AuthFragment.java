@@ -68,11 +68,13 @@ public class AuthFragment extends BaseFragment {
         mRememberCheck = rootView.findViewById(R.id.remember);
         Button actionButton = rootView.findViewById(R.id.action);
 
-        mUserName.requestFocus();
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
         readBundle(getArguments());
+
+        if (savedInstanceState == null) {
+            mUserName.requestFocus();
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
 
         switch (mAction) {
             case IN: {
@@ -125,16 +127,4 @@ public class AuthFragment extends BaseFragment {
     private boolean isInputValid() {
         return !(mUserName.getText().toString().isEmpty() || mUserPassword.getText().toString().isEmpty());
     }
-
-//    private void addUserToPreferences(User user) {
-//        if (getActivity() != null) {
-//            getActivity().getPreferences(Context.MODE_PRIVATE)
-//                    .edit()
-//                    .putBoolean(IS_USER_REMEMBERED, mRememberCheck.isChecked())
-//                    .putLong(USER_ID, user.getId())
-//                    .putString(USER_NAME, user.getName())
-//                    .putString(USER_PASS, user.getPassword())
-//                    .apply();
-//        }
-//    }
 }

@@ -81,9 +81,11 @@ public class EditNoteDialogFragment extends DialogFragment {
             mRequest = NotesListFragment.ADD_NOTE_REQUEST;
         }
 
-        mEditNote.requestFocus();
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        if (savedInstanceState == null) {
+            mEditNote.requestFocus();
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
 
         getDialog().setTitle(FRAGMENT_TITLE);
 
