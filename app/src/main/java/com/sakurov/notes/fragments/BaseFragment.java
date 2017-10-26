@@ -36,6 +36,8 @@ abstract class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(FRAGMENT_TITLE);
+
+        enableLogOutMenuItem(false);
     }
 
     public static long getCurrentUserId(Activity activity) {
@@ -44,5 +46,10 @@ abstract class BaseFragment extends Fragment {
 
     public static String getCurrentUserName(Activity activity) {
         return activity.getPreferences(Context.MODE_PRIVATE).getString(USER_NAME, null);
+    }
+
+    protected void enableLogOutMenuItem(boolean flag) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setLogOffEnabled(flag);
     }
 }

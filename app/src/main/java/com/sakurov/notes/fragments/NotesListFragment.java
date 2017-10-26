@@ -41,7 +41,7 @@ public class NotesListFragment extends BaseFragment {
         mNotes = mSource.getNotes(getCurrentUserId(getActivity()));
         mNotesRecyclerAdapter.updateList(mNotes);
 
-        enableLogOutMenuItem();
+        enableLogOutMenuItem(true);
     }
 
     @Nullable
@@ -83,10 +83,5 @@ public class NotesListFragment extends BaseFragment {
             mNotes = mSource.getNotes(getCurrentUserId(getActivity()));
             mNotesRecyclerAdapter.updateList(mNotes);
         }
-    }
-
-    private void enableLogOutMenuItem() {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.setLogOffEnabled(true);
     }
 }

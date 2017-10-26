@@ -12,6 +12,7 @@ import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -80,6 +81,10 @@ public class EditNoteDialogFragment extends DialogFragment {
             textIn.setHint(FRAGMENT_TITLE);
             mRequest = NotesListFragment.ADD_NOTE_REQUEST;
         }
+
+        mEditNote.requestFocus();
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         getDialog().setTitle(FRAGMENT_TITLE);
 

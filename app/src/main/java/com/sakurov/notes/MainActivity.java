@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        menu.getItem(0).setVisible(mLogOffEnabled);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setLogOffEnabled(boolean flag) {
         mLogOffEnabled = flag;
+        invalidateOptionsMenu();
     }
 
     @Override
