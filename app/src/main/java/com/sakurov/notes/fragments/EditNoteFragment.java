@@ -1,10 +1,6 @@
 package com.sakurov.notes.fragments;
 
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,26 +17,22 @@ import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.helpers.DBSource;
 
-public class EditNoteDialogFragment extends DialogFragment {
-
-    private static final String NOTE = "note";
+public class EditNoteFragment extends BaseFragment {
 
     private EditText mEditNote;
     private Note mNote;
     private DBSource mSource;
 
-    private int mRequest;
-
-    public static EditNoteDialogFragment newInstance() {
-        return new EditNoteDialogFragment();
+    public static EditNoteFragment newInstance() {
+        return new EditNoteFragment();
     }
 
-    public static EditNoteDialogFragment newInstance(Note note) {
+    public static EditNoteFragment newInstance(Note note) {
 
         Bundle bundle = new Bundle();
         bundle.putParcelable(NOTE, note);
 
-        EditNoteDialogFragment fragment = new EditNoteDialogFragment();
+        EditNoteFragment fragment = new EditNoteFragment();
         fragment.setArguments(bundle);
 
         return fragment;
@@ -56,12 +48,13 @@ public class EditNoteDialogFragment extends DialogFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSource = new DBSource(getActivity());
+        setActionBarTitle(FRAGMENT_TITLE);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.dialog_fragment_edit_note, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_edit_note, container, false);
         TextInputLayout textIn = rootView.findViewById(R.id.in_layout);
 
         mEditNote = rootView.findViewById(R.id.text);
@@ -72,13 +65,11 @@ public class EditNoteDialogFragment extends DialogFragment {
         String FRAGMENT_TITLE;
         if (mNote != null) {
             FRAGMENT_TITLE = "Edit note";
-            mRequest = NoteFragment.EDIT_NOTE_REQUEST;
             textIn.setHint(FRAGMENT_TITLE);
             mEditNote.setText(mNote.getText());
         } else {
             FRAGMENT_TITLE = "New note";
             textIn.setHint(FRAGMENT_TITLE);
-            mRequest = NotesListFragment.ADD_NOTE_REQUEST;
         }
 
         if (savedInstanceState == null) {
@@ -86,8 +77,6 @@ public class EditNoteDialogFragment extends DialogFragment {
             ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                     .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
-
-        getDialog().setTitle(FRAGMENT_TITLE);
 
         fabDone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +90,7 @@ public class EditNoteDialogFragment extends DialogFragment {
                         mNote.setText(mEditNote.getText().toString());
                         mSource.updateNote(mNote);
                     }
-                    getDialog().dismiss();
+                    getFragmentManager().popBackStack();
                 } else
                     Toast.makeText(getActivity(), R.string.empty_note, Toast.LENGTH_SHORT).show();
             }
@@ -112,16 +101,5 @@ public class EditNoteDialogFragment extends DialogFragment {
 
     private boolean isInputValid() {
         return !mEditNote.getText().toString().isEmpty();
-    }
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        if (mRequest != 0) {
-            getTargetFragment()
-                    .onActivityResult(mRequest,
-                            Activity.RESULT_OK,
-                            new Intent().putExtra(NOTE, mNote));
-        }
-        super.onDismiss(dialog);
     }
 }

@@ -1,20 +1,17 @@
 package com.sakurov.notes.fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.sakurov.notes.MainActivity;
 import com.sakurov.notes.R;
 
-import static com.sakurov.notes.fragments.AuthFragment.USER_ID;
-import static com.sakurov.notes.fragments.AuthFragment.USER_NAME;
-
 abstract class BaseFragment extends Fragment {
+
+    protected static final String NOTE = "note";
 
     protected String FRAGMENT_TITLE = "Notes";
 
@@ -34,14 +31,18 @@ abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.setActionBarTitle(FRAGMENT_TITLE);
 
+        setActionBarTitle(FRAGMENT_TITLE);
         enableLogOutMenuItem(false);
     }
 
     protected void enableLogOutMenuItem(boolean flag) {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setLogOffEnabled(flag);
+    }
+
+    protected void setActionBarTitle(String title) {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity.setActionBarTitle(title);
     }
 }

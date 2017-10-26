@@ -19,11 +19,6 @@ import com.sakurov.notes.helpers.DBSource;
 
 public class AuthFragment extends BaseFragment {
 
-    public static final String USER_ID = "user_id";
-    public static final String USER_NAME = "user_name";
-    public static final String USER_PASS = "user_pass";
-    public static final String IS_USER_REMEMBERED = "is_user_remembered";
-
     final static int IN = 100;
     final static int UP = 200;
 

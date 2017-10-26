@@ -1,7 +1,5 @@
 package com.sakurov.notes.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -17,16 +15,11 @@ import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.helpers.DBSource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NotesListFragment extends BaseFragment {
 
-    public static final int ADD_NOTE_REQUEST = 800;
-
-    private List<Note> mNotes = new ArrayList<>();
     private NotesRecyclerAdapter mNotesRecyclerAdapter;
-    private DBSource mSource;
 
     public static NotesListFragment newInstance() {
         return new NotesListFragment();
@@ -37,9 +30,9 @@ public class NotesListFragment extends BaseFragment {
         FRAGMENT_TITLE = "My notes";
         super.onActivityCreated(savedInstanceState);
 
-        mSource = new DBSource(getActivity());
-        mNotes = mSource.getNotes(PrefsManager.getInstance().getCurrentUserID());
-        mNotesRecyclerAdapter.updateList(mNotes);
+        DBSource dbSource = new DBSource(getActivity());
+        List<Note> notes = dbSource.getNotes(PrefsManager.getInstance().getCurrentUserID());
+        mNotesRecyclerAdapter.updateList(notes);
 
         enableLogOutMenuItem(true);
     }
@@ -59,27 +52,10 @@ public class NotesListFragment extends BaseFragment {
         fabAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditNoteDialogFragment fragment = EditNoteDialogFragment.newInstance();
-                fragment.setTargetFragment(NotesListFragment.this, ADD_NOTE_REQUEST);
-                fragment.show(getFragmentManager(), EditNoteDialogFragment.class.getSimpleName());
+                replaceFragment(EditNoteFragment.newInstance(), true);
             }
         });
 
         return rootView;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == ADD_NOTE_REQUEST) {
-                updateRecycler();
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void updateRecycler() {
-        mNotes = mSource.getNotes(PrefsManager.getInstance().getCurrentUserID());
-        mNotesRecyclerAdapter.updateList(mNotes);
     }
 }
