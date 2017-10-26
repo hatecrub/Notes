@@ -2,8 +2,6 @@ package com.sakurov.notes;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,14 +10,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.sakurov.notes.entities.User;
-import com.sakurov.notes.fragments.AuthFragment;
 import com.sakurov.notes.fragments.ChooseFragment;
 import com.sakurov.notes.fragments.NotesListFragment;
 import com.sakurov.notes.helpers.DBSource;
 
 public class MainActivity extends AppCompatActivity {
 
-    SharedPreferences mPreferences;
+    PrefsManager mPrefsManager;
 
     private boolean mLogOffEnabled = false;
 
@@ -29,17 +26,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            mPreferences = getPreferences(Context.MODE_PRIVATE);
-            boolean isUser = mPreferences.getBoolean(AuthFragment.IS_USER_REMEMBERED, false);
+            mPrefsManager = PrefsManager.getInstance();
 
-            if (isUser) {
-                User user = new User(mPreferences.getString(AuthFragment.USER_NAME, null),
-                        mPreferences.getString(AuthFragment.USER_PASS, null));
+            if (mPrefsManager.isUserRemembered()) {
+                User user = mPrefsManager.getCurrentUser();
 
                 DBSource dbSource = new DBSource(this);
 
                 if (dbSource.checkUser(user)) {
-                    user.setId(dbSource.getUserId(user));
+                    mPrefsManager.setCurrentUserId(dbSource.getUserId(user));
                     addAsRootFragment(NotesListFragment.newInstance());
                 } else {
                     Toast.makeText(this, getString(R.string.user_dont_exist), Toast.LENGTH_SHORT).show();
@@ -68,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.log_out) {
             if (mLogOffEnabled) {
-                getPreferences(Context.MODE_PRIVATE).edit().clear().apply();
+                mPrefsManager.clear();
                 addAsRootFragment(ChooseFragment.newInstance());
             }
         }

@@ -6,13 +6,13 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.sakurov.notes.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.User;
 import com.sakurov.notes.helpers.DBSource;
@@ -96,7 +96,7 @@ public class AuthFragment extends BaseFragment {
                         case IN: {
                             if (mSource.checkUser(user)) {
                                 user.setId(mSource.getUserId(user));
-                                addUserToPreferences(user);
+                                PrefsManager.getInstance().setCurrentUser(user, mRememberCheck.isChecked());
                                 addAsRootFragment(NotesListFragment.newInstance());
                             } else {
                                 Toast.makeText(getActivity(),
@@ -108,7 +108,7 @@ public class AuthFragment extends BaseFragment {
                         }
                         case UP: {
                             user.setId(mSource.addUser(user));
-                            addUserToPreferences(user);
+                            PrefsManager.getInstance().setCurrentUser(user, mRememberCheck.isChecked());
                             addAsRootFragment(NotesListFragment.newInstance());
                             break;
                         }
@@ -126,15 +126,15 @@ public class AuthFragment extends BaseFragment {
         return !(mUserName.getText().toString().isEmpty() || mUserPassword.getText().toString().isEmpty());
     }
 
-    private void addUserToPreferences(User user) {
-        if (getActivity() != null) {
-            getActivity().getPreferences(Context.MODE_PRIVATE)
-                    .edit()
-                    .putBoolean(IS_USER_REMEMBERED, mRememberCheck.isChecked())
-                    .putLong(USER_ID, user.getId())
-                    .putString(USER_NAME, user.getName())
-                    .putString(USER_PASS, user.getPassword())
-                    .apply();
-        }
-    }
+//    private void addUserToPreferences(User user) {
+//        if (getActivity() != null) {
+//            getActivity().getPreferences(Context.MODE_PRIVATE)
+//                    .edit()
+//                    .putBoolean(IS_USER_REMEMBERED, mRememberCheck.isChecked())
+//                    .putLong(USER_ID, user.getId())
+//                    .putString(USER_NAME, user.getName())
+//                    .putString(USER_PASS, user.getPassword())
+//                    .apply();
+//        }
+//    }
 }

@@ -40,14 +40,6 @@ abstract class BaseFragment extends Fragment {
         enableLogOutMenuItem(false);
     }
 
-    public static long getCurrentUserId(Activity activity) {
-        return activity.getPreferences(Context.MODE_PRIVATE).getLong(USER_ID, 0);
-    }
-
-    public static String getCurrentUserName(Activity activity) {
-        return activity.getPreferences(Context.MODE_PRIVATE).getString(USER_NAME, null);
-    }
-
     protected void enableLogOutMenuItem(boolean flag) {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setLogOffEnabled(flag);

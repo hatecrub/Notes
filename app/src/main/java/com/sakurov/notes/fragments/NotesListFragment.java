@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sakurov.notes.MainActivity;
 import com.sakurov.notes.NotesRecyclerAdapter;
+import com.sakurov.notes.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.helpers.DBSource;
@@ -38,7 +38,7 @@ public class NotesListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         mSource = new DBSource(getActivity());
-        mNotes = mSource.getNotes(getCurrentUserId(getActivity()));
+        mNotes = mSource.getNotes(PrefsManager.getInstance().getCurrentUserID());
         mNotesRecyclerAdapter.updateList(mNotes);
 
         enableLogOutMenuItem(true);
@@ -79,9 +79,7 @@ public class NotesListFragment extends BaseFragment {
     }
 
     private void updateRecycler() {
-        if (getActivity() != null) {
-            mNotes = mSource.getNotes(getCurrentUserId(getActivity()));
-            mNotesRecyclerAdapter.updateList(mNotes);
-        }
+        mNotes = mSource.getNotes(PrefsManager.getInstance().getCurrentUserID());
+        mNotesRecyclerAdapter.updateList(mNotes);
     }
 }

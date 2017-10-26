@@ -16,11 +16,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.sakurov.notes.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.helpers.DBSource;
-
-import static com.sakurov.notes.fragments.AuthFragment.USER_ID;
 
 public class EditNoteDialogFragment extends DialogFragment {
 
@@ -93,7 +92,7 @@ public class EditNoteDialogFragment extends DialogFragment {
             public void onClick(View view) {
                 if (isInputValid()) {
                     if (mNote == null) {
-                        mNote = new Note(getActivity().getPreferences(Context.MODE_PRIVATE).getLong(USER_ID, 0),
+                        mNote = new Note(PrefsManager.getInstance().getCurrentUserID(),
                                 mEditNote.getText().toString());
                         mNote.setId(mSource.addNote(mNote));
                     } else {

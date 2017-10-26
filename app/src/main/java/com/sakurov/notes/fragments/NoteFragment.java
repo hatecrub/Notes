@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sakurov.notes.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 
@@ -92,7 +93,7 @@ public class NoteFragment extends BaseFragment {
     private void setTextViews() {
         noteText.setText(mNote.getText());
         noteAuthor.setText(String.format("%s%s", getString(R.string.author),
-                getCurrentUserName(getActivity())));
+                PrefsManager.getInstance().getCurrentUserName()));
         noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
         noteDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNote.getDateEdited()));
     }
