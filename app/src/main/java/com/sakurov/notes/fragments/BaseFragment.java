@@ -12,8 +12,9 @@ import com.sakurov.notes.R;
 abstract class BaseFragment extends Fragment {
 
     protected static final String NOTE = "note";
+    protected static final String NOTIFICATION = "notification";
 
-    protected String FRAGMENT_TITLE = "Notes";
+    private String FRAGMENT_TITLE;
 
     void replaceFragment(Fragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -31,8 +32,8 @@ abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        setActionBarTitle(FRAGMENT_TITLE);
+        if (FRAGMENT_TITLE != null)
+            setActionBarTitle(FRAGMENT_TITLE);
         enableLogOutMenuItem(false);
     }
 
@@ -44,5 +45,9 @@ abstract class BaseFragment extends Fragment {
     protected void setActionBarTitle(String title) {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(title);
+    }
+
+    public void setTitle(String fragmentTitle) {
+        this.FRAGMENT_TITLE = fragmentTitle;
     }
 }

@@ -9,17 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sakurov.notes.NotesRecyclerAdapter;
+import com.sakurov.notes.ItemsRecyclerAdapter;
 import com.sakurov.notes.PrefsManager;
 import com.sakurov.notes.R;
-import com.sakurov.notes.entities.Note;
+import com.sakurov.notes.entities.Item;
 import com.sakurov.notes.helpers.DBSource;
 
 import java.util.List;
 
 public class NotesListFragment extends BaseFragment {
 
-    private NotesRecyclerAdapter mNotesRecyclerAdapter;
+    //    private NotesRecyclerAdapter mNotesRecyclerAdapter;
+    private ItemsRecyclerAdapter mItemsRecyclerAdapter;
 
     public static NotesListFragment newInstance() {
         return new NotesListFragment();
@@ -27,12 +28,14 @@ public class NotesListFragment extends BaseFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        FRAGMENT_TITLE = "My notes";
+        setTitle("My notes");
         super.onActivityCreated(savedInstanceState);
 
         DBSource dbSource = new DBSource(getActivity());
-        List<Note> notes = dbSource.getNotes(PrefsManager.getInstance().getCurrentUserID());
-        mNotesRecyclerAdapter.updateList(notes);
+//        List<Note> notes = dbSource.getNotes(PrefsManager.getInstance().getCurrentUserID());
+//        mNotesRecyclerAdapter.updateList(notes);
+        List<Item> items = dbSource.getAllRecords(PrefsManager.getInstance().getCurrentUserID());
+        mItemsRecyclerAdapter.updateList(items);
 
         enableLogOutMenuItem(true);
     }
@@ -45,15 +48,16 @@ public class NotesListFragment extends BaseFragment {
         RecyclerView notesRecycler = rootView.findViewById(R.id.notes_list);
         notesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mNotesRecyclerAdapter = new NotesRecyclerAdapter(getFragmentManager());
-        notesRecycler.setAdapter(mNotesRecyclerAdapter);
+//        mNotesRecyclerAdapter = new NotesRecyclerAdapter(getFragmentManager());
+//        notesRecycler.setAdapter(mNotesRecyclerAdapter);
+        mItemsRecyclerAdapter = new ItemsRecyclerAdapter(getContext(), getFragmentManager());
+        notesRecycler.setAdapter(mItemsRecyclerAdapter);
 
         FloatingActionButton fabAddNote = rootView.findViewById(R.id.fab);
         fabAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                replaceFragment(EditNoteFragment.newInstance(), true);
-                replaceFragment(new ViewPagerFragment(), true);
+                replaceFragment(ViewPagerFragment.newInstance(), true);
             }
         });
 

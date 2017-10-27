@@ -26,6 +26,7 @@ public class AuthFragment extends BaseFragment {
 
     private DBSource mSource;
     private EditText mUserName, mUserPassword;
+    private Button mActionButton;
     private CheckBox mRememberCheck;
 
     private int mAction;
@@ -49,40 +50,11 @@ public class AuthFragment extends BaseFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        FRAGMENT_TITLE = "Authentication";
+        setTitle("Authentication");
         super.onActivityCreated(savedInstanceState);
         mSource = new DBSource(getActivity());
-    }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_auth, container, false);
-        mUserName = rootView.findViewById(R.id.name);
-        mUserPassword = rootView.findViewById(R.id.password);
-        mRememberCheck = rootView.findViewById(R.id.remember);
-        Button actionButton = rootView.findViewById(R.id.action);
-
-        readBundle(getArguments());
-
-        if (savedInstanceState == null) {
-            mUserName.requestFocus();
-            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                    .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        }
-
-        switch (mAction) {
-            case IN: {
-                actionButton.setText(getString(R.string.sign_in));
-                break;
-            }
-            case UP: {
-                actionButton.setText(getString(R.string.sign_up));
-                break;
-            }
-        }
-
-        actionButton.setOnClickListener(new View.OnClickListener() {
+        mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isInputValid()) {
@@ -116,6 +88,36 @@ public class AuthFragment extends BaseFragment {
 
             }
         });
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_auth, container, false);
+        mUserName = rootView.findViewById(R.id.name);
+        mUserPassword = rootView.findViewById(R.id.password);
+        mRememberCheck = rootView.findViewById(R.id.remember);
+        mActionButton = rootView.findViewById(R.id.action);
+
+        readBundle(getArguments());
+
+        if (savedInstanceState == null) {
+            mUserName.requestFocus();
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                    .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        }
+
+        switch (mAction) {
+            case IN: {
+                mActionButton.setText(getString(R.string.sign_in));
+                break;
+            }
+            case UP: {
+                mActionButton.setText(getString(R.string.sign_up));
+                break;
+            }
+        }
+
         return rootView;
     }
 

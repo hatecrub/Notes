@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
-public class Note implements Parcelable {
+public class Note implements Parcelable, Item {
 
     private long id;
     private final long userId;
@@ -59,7 +59,7 @@ public class Note implements Parcelable {
 
 //--------------------------------Parcelable implementation-----------------------------------------
 
-    private Note(Parcel in) {
+    protected Note(Parcel in) {
         id = in.readLong();
         userId = in.readLong();
         text = in.readString();
@@ -94,4 +94,25 @@ public class Note implements Parcelable {
         }
     };
 
+//-----------------------------------Item Implementation------------------------------------------
+
+    @Override
+    public int getItemType() {
+        return Item.NOTE;
+    }
+
+    @Override
+    public String getItemText() {
+        return getText();
+    }
+
+    @Override
+    public String getItemDateCreated() {
+        return getDateCreated();
+    }
+
+    @Override
+    public long getItemTimeMillis() {
+        return -1;
+    }
 }

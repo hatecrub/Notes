@@ -20,6 +20,7 @@ import com.sakurov.notes.helpers.DBSource;
 public class EditNoteFragment extends BaseFragment {
 
     private EditText mEditNote;
+    FloatingActionButton mFabDone;
     private Note mNote;
     private DBSource mSource;
 
@@ -47,8 +48,27 @@ public class EditNoteFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         mSource = new DBSource(getActivity());
-        setActionBarTitle(FRAGMENT_TITLE);
+
+        mFabDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isInputValid()) {
+                    if (mNote == null) {
+                        mNote = new Note(PrefsManager.getInstance().getCurrentUserID(),
+                                mEditNote.getText().toString());
+                        mNote.setId(mSource.addNote(mNote));
+                        getParentFragment().getFragmentManager().popBackStack();
+                    } else {
+                        mNote.setText(mEditNote.getText().toString());
+                        mSource.updateNote(mNote);
+                        getFragmentManager().popBackStack();
+                    }
+                } else
+                    Toast.makeText(getActivity(), R.string.empty_note, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Nullable
@@ -58,43 +78,33 @@ public class EditNoteFragment extends BaseFragment {
         TextInputLayout textIn = rootView.findViewById(R.id.in_layout);
 
         mEditNote = rootView.findViewById(R.id.text);
-        FloatingActionButton fabDone = rootView.findViewById(R.id.fab_done);
+        mFabDone = rootView.findViewById(R.id.fab_done);
 
         readBundle(getArguments());
 
         String FRAGMENT_TITLE;
         if (mNote != null) {
             FRAGMENT_TITLE = "Edit note";
-            textIn.setHint(FRAGMENT_TITLE);
+            setTitle(FRAGMENT_TITLE);
             mEditNote.setText(mNote.getText());
+
+            if (savedInstanceState == null) {
+                mEditNote.requestFocus();
+                ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            }
+
         } else {
             FRAGMENT_TITLE = "New note";
-            textIn.setHint(FRAGMENT_TITLE);
-        }
 
-        if (savedInstanceState == null) {
-            mEditNote.requestFocus();
-            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                    .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        }
-
-        fabDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isInputValid()) {
-                    if (mNote == null) {
-                        mNote = new Note(PrefsManager.getInstance().getCurrentUserID(),
-                                mEditNote.getText().toString());
-                        mNote.setId(mSource.addNote(mNote));
-                    } else {
-                        mNote.setText(mEditNote.getText().toString());
-                        mSource.updateNote(mNote);
-                    }
-                    getFragmentManager().popBackStack();
-                } else
-                    Toast.makeText(getActivity(), R.string.empty_note, Toast.LENGTH_SHORT).show();
+            if (savedInstanceState == null) {
+                mEditNote.requestFocus();
+                ((InputMethodManager) getParentFragment().getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
-        });
+        }
+
+        textIn.setHint(FRAGMENT_TITLE);
 
         return rootView;
     }

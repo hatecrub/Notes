@@ -1,39 +1,82 @@
 package com.sakurov.notes.entities;
 
-/**
- * Created by sakurov on 26.10.17.
- */
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Notification extends Note {
+public class Notification extends Note implements Parcelable, Item {
 
-    private String date;
-    private String time;
+    private long timeInMillis;
 
-    Notification(long userId, String text, String date, String time) {
+    public Notification(long userId, String text, long timeInMillis) {
         super(userId, text);
-        this.date = date;
-        this.time = time;
+        this.timeInMillis = timeInMillis;
     }
 
-    Notification(long id, long userId, String text, String dateCreated, String dateEdited,String date, String time){
+    public Notification(long id, long userId, String text, String dateCreated, String dateEdited, long timeInMillis) {
         super(id, userId, text, dateCreated, dateEdited);
-        this.date = date;
-        this.time = time;
+        this.timeInMillis = timeInMillis;
     }
 
-    public String getDate() {
-        return date;
+    public long getTimeInMillis() {
+        return timeInMillis;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTimeInMillis(long timeInMillis) {
+        this.timeInMillis = timeInMillis;
     }
 
-    public String getTime() {
-        return time;
+//--------------------------------Parcelable implementation-----------------------------------------
+
+    protected Notification(Parcel in) {
+        super(in);
+        timeInMillis = in.readLong();
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeLong(timeInMillis);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Notification> CREATOR = new Parcelable.Creator<Notification>() {
+        @Override
+        public Notification createFromParcel(Parcel in) {
+            return new Notification(in);
+        }
+
+        @Override
+        public Notification[] newArray(int size) {
+            return new Notification[size];
+        }
+    };
+
+//-----------------------------------Item Implementation------------------------------------------
+
+    @Override
+    public int getItemType() {
+        if (System.currentTimeMillis() > getTimeInMillis()) {
+            return Item.NOTIFICATION_OUTDATED;
+        } else return Item.NOTIFICATION;
+    }
+
+    @Override
+    public String getItemText() {
+        return getText();
+    }
+
+    @Override
+    public String getItemDateCreated() {
+        return getDateCreated();
+    }
+
+    @Override
+    public long getItemTimeMillis() {
+        return getTimeInMillis();
     }
 }

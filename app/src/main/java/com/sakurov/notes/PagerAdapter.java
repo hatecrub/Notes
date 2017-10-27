@@ -1,42 +1,42 @@
 package com.sakurov.notes;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.sakurov.notes.fragments.EditNoteFragment;
 import com.sakurov.notes.fragments.EditNotificationFragment;
 
-/**
- * Created by sakurov on 26.10.17.
- */
-
 public class PagerAdapter extends FragmentPagerAdapter {
-    int mNumOfTabs;
 
-    public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+    private String tabTitles[] = new String[]{"New Note", "New Notification"};
+
+    public PagerAdapter(FragmentManager fm, Context context) {
         super(fm);
-        this.mNumOfTabs = NumOfTabs;
+    }
+
+    @Override
+    public int getCount() {
+        return 2;
     }
 
     @Override
     public Fragment getItem(int position) {
-
         switch (position) {
             case 0:
-                EditNoteFragment tab1 = EditNoteFragment.newInstance();
-                return tab1;
+                return EditNoteFragment.newInstance();
             case 1:
-                EditNotificationFragment tab2 = EditNotificationFragment.newInstance();
-                return tab2;
+                return EditNotificationFragment.newInstance();
             default:
                 return null;
         }
     }
 
     @Override
-    public int getCount() {
-        return mNumOfTabs;
+    public CharSequence getPageTitle(int position) {
+        // Generate title based on item position
+        return tabTitles[position];
     }
 }
+

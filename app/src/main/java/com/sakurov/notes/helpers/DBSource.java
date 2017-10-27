@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.sakurov.notes.entities.Item;
 import com.sakurov.notes.entities.Note;
+import com.sakurov.notes.entities.Notification;
 import com.sakurov.notes.entities.User;
 
 import java.util.ArrayList;
@@ -86,6 +88,8 @@ public class DBSource {
         }
     }
 
+//------------------------------------------NOTE-----------------------------------------------
+
     public List<Note> getNotes(long userId) {
         List<Note> notes = new ArrayList<>();
         read();
@@ -143,5 +147,76 @@ public class DBSource {
                         DBHelper.ID + "=?",
                         new String[]{"" + note.getId()});
         close();
+    }
+
+//--------------------------------------NOTIFICATION---------------------------------------------
+
+    public List<Notification> getNotifications(long userId) {
+        List<Notification> notifications = new ArrayList<>();
+        read();
+        Cursor cursor = mDatabase
+                .query(DBHelper.NOTIFICATIONS,
+                        null,
+                        DBHelper.USER_ID + "=?",
+                        new String[]{"" + userId},
+                        null,
+                        null,
+                        null);
+        if (cursor.moveToFirst()) {
+            do {
+                notifications.add(
+                        new Notification(
+                                cursor.getInt(cursor.getColumnIndex(DBHelper.ID)),
+                                cursor.getLong(cursor.getColumnIndex(DBHelper.USER_ID)),
+                                cursor.getString(cursor.getColumnIndex(DBHelper.TEXT)),
+                                cursor.getString(cursor.getColumnIndex(DBHelper.DATE_CREATED)),
+                                cursor.getString(cursor.getColumnIndex(DBHelper.DATE_EDITED)),
+                                cursor.getLong(cursor.getColumnIndex(DBHelper.TIME_NOTIFICATION))));
+            } while (cursor.moveToNext());
+            cursor.close();
+        } else {
+            cursor.close();
+        }
+        close();
+        return notifications;
+    }
+
+    public long addNotification(Notification notification) {
+        write();
+        ContentValues cvNotification = new ContentValues();
+        cvNotification.put(DBHelper.USER_ID, notification.getUserId());
+        cvNotification.put(DBHelper.TEXT, notification.getText());
+        cvNotification.put(DBHelper.DATE_CREATED, notification.getDateCreated());
+        cvNotification.put(DBHelper.DATE_EDITED, notification.getDateEdited());
+        cvNotification.put(DBHelper.TIME_NOTIFICATION, notification.getTimeInMillis());
+        long rowId = mDatabase
+                .insertOrThrow(DBHelper.NOTIFICATIONS,
+                        null,
+                        cvNotification);
+        close();
+        return rowId;
+    }
+
+    public void updateNotification(Notification notification) {
+        write();
+        ContentValues cvNote = new ContentValues();
+        cvNote.put(DBHelper.USER_ID, notification.getUserId());
+        cvNote.put(DBHelper.TEXT, notification.getText());
+        cvNote.put(DBHelper.DATE_CREATED, notification.getDateCreated());
+        cvNote.put(DBHelper.DATE_EDITED, notification.getDateEdited());
+        cvNote.put(DBHelper.TIME_NOTIFICATION, notification.getTimeInMillis());
+        mDatabase
+                .update(DBHelper.NOTIFICATIONS,
+                        cvNote,
+                        DBHelper.ID + "=?",
+                        new String[]{"" + notification.getId()});
+        close();
+    }
+
+    public List<Item> getAllRecords(long userId) {
+        List<Item> items = new ArrayList<>();
+        items.addAll(getNotes(userId));
+        items.addAll(getNotifications(userId));
+        return items;
     }
 }
