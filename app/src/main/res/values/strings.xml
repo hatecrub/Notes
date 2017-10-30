@@ -15,7 +15,7 @@
     <string name="field_empty">Fill all fields, please!</string>
     <string name="edited">Last edited:\t</string>
     <string name="notification">Notification</string>
-    <string name="time">Time:</string>
+    <string name="time">Time:\t</string>
     <string name="date_text">Current date</string>
     <string name="date_button">Pick date</string>
     <string name="time_text">Current time</string>

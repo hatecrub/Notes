@@ -1,11 +1,14 @@
 package com.sakurov.notes.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.sakurov.notes.PagerAdapter;
 import com.sakurov.notes.R;
@@ -25,6 +28,16 @@ public class ViewPagerFragment extends BaseFragment {
         ViewPager viewPager = rootView.findViewById(R.id.view_pager);
         viewPager.setAdapter(new PagerAdapter(getChildFragmentManager(), getContext()));
 
+        if (savedInstanceState == null) {
+            showSoftKeyboard();
+        }
+
         return rootView;
+    }
+
+    private void showSoftKeyboard() {
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        Log.d(this.getClass().getSimpleName(), "open keyboard");
     }
 }

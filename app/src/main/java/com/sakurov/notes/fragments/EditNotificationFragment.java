@@ -1,13 +1,17 @@
 package com.sakurov.notes.fragments;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +23,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.sakurov.notes.NotificationReceiver;
 import com.sakurov.notes.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Notification;
@@ -35,6 +40,7 @@ public class EditNotificationFragment extends BaseFragment {
     private Notification mNotification;
     private DBSource mSource;
     private FloatingActionButton mFabDone;
+    private TextInputLayout mTextIn;
 
     static final int DATE_DIALOG_ID = 1;
     static final int TIME_DIALOG_ID = 2;
@@ -86,11 +92,13 @@ public class EditNotificationFragment extends BaseFragment {
                         mNotification = new Notification(PrefsManager.getInstance().getCurrentUserID(),
                                 mEditNotification.getText().toString(), time);
                         mNotification.setId(mSource.addNotification(mNotification));
+                        addAlarm(mNotification, getParentFragment().getActivity().getApplicationContext());
                         getParentFragment().getFragmentManager().popBackStack();
                     } else {
                         mNotification.setText(mEditNotification.getText().toString());
                         mNotification.setTimeInMillis(time);
                         mSource.updateNotification(mNotification);
+                        addAlarm(mNotification, getActivity().getApplicationContext());
                         getFragmentManager().popBackStack();
                     }
                 } else
@@ -103,7 +111,7 @@ public class EditNotificationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_notification, container, false);
-        TextInputLayout textIn = rootView.findViewById(R.id.in_layout);
+        mTextIn = rootView.findViewById(R.id.in_layout);
 
         mEditNotification = rootView.findViewById(R.id.text);
         mFabDone = rootView.findViewById(R.id.fab_done);
@@ -120,19 +128,19 @@ public class EditNotificationFragment extends BaseFragment {
             setTitle(FRAGMENT_TITLE);
             mEditNotification.setText(mNotification.getText());
             if (savedInstanceState == null) {
-                showSoftKeyboard();
                 mCalendar.setTimeInMillis(mNotification.getTimeInMillis());
                 updateDisplay();
+                showSoftKeyboard();
             }
         } else {
             FRAGMENT_TITLE = "New notification";
             if (savedInstanceState == null) {
-                showSoftKeyboard();
                 updateDisplay();
+                mEditNotification.requestFocus();
             }
         }
 
-        textIn.setHint(FRAGMENT_TITLE);
+        mTextIn.setHint(FRAGMENT_TITLE);
 
         pickDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +161,7 @@ public class EditNotificationFragment extends BaseFragment {
 
     private void updateDisplay() {
         mDateAndTimeDisplay.setText(
-                new SimpleDateFormat("dd.MM.yyyy hh:mm")
+                new SimpleDateFormat("dd.MM.yyyy HH:mm")
                         .format(mCalendar.getTime()));
     }
 
@@ -173,7 +181,7 @@ public class EditNotificationFragment extends BaseFragment {
             new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    mCalendar.set(Calendar.HOUR, hourOfDay);
+                    mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                     mCalendar.set(Calendar.MINUTE, minute);
                     updateDisplay();
                 }
@@ -190,7 +198,7 @@ public class EditNotificationFragment extends BaseFragment {
             case TIME_DIALOG_ID:
                 return new TimePickerDialog(getContext(),
                         timeListener,
-                        mCalendar.get(Calendar.HOUR),
+                        mCalendar.get(Calendar.HOUR_OF_DAY),
                         mCalendar.get(Calendar.MINUTE),
                         true);
         }
@@ -210,7 +218,20 @@ public class EditNotificationFragment extends BaseFragment {
 
     private void showSoftKeyboard() {
         mEditNotification.requestFocus();
-        ((InputMethodManager) getParentFragment().getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                 .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        Log.d(this.getClass().getSimpleName(), "open keyboard");
     }
+
+    private void addAlarm(Notification notification, Context context) {
+        Intent notificationIntent = new Intent(context, NotificationReceiver.class);
+        notificationIntent.putExtra("NOT", notification);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, notification.getTimeInMillis(), pendingIntent);
+    }
+
 }

@@ -88,22 +88,13 @@ public class EditNoteFragment extends BaseFragment {
             FRAGMENT_TITLE = "Edit note";
             setTitle(FRAGMENT_TITLE);
             mEditNote.setText(mNote.getText());
-
             if (savedInstanceState == null) {
-                Log.d(FRAGMENT_TITLE,"open keyboard");
-                mEditNote.requestFocus();
-                ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                        .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                showSoftKeyboard();
             }
-
         } else {
             FRAGMENT_TITLE = "New note";
-
             if (savedInstanceState == null) {
-                Log.d(FRAGMENT_TITLE,"open keyboard");
                 mEditNote.requestFocus();
-                ((InputMethodManager) getParentFragment().getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                        .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         }
 
@@ -114,5 +105,12 @@ public class EditNoteFragment extends BaseFragment {
 
     private boolean isInputValid() {
         return !mEditNote.getText().toString().isEmpty();
+    }
+
+    private void showSoftKeyboard() {
+        mEditNote.requestFocus();
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        Log.d(this.getClass().getSimpleName(), "open keyboard");
     }
 }
