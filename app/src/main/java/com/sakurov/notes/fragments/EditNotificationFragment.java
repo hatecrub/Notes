@@ -21,28 +21,26 @@ import android.widget.Toast;
 
 import com.sakurov.notes.PrefsManager;
 import com.sakurov.notes.R;
-import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.Notification;
 import com.sakurov.notes.helpers.DBSource;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class EditNotificationFragment extends BaseFragment {
+
+    private final static String TIME = "time";
+
     private EditText mEditNotification;
     private Notification mNotification;
     private DBSource mSource;
     private FloatingActionButton mFabDone;
 
-    long mTime;
-
     static final int DATE_DIALOG_ID = 1;
     static final int TIME_DIALOG_ID = 2;
-    private TextView dateDisplay;
-    private Button pickDate;
-    private int year, month, day;
-    private TextView timeDisplay;
-    private Button pickTime;
-    private int hours, min;
+    private TextView mDateAndTimeDisplay;
+
+    private Calendar mCalendar = Calendar.getInstance();
 
     public static EditNotificationFragment newInstance() {
         return new EditNotificationFragment();
@@ -66,33 +64,32 @@ public class EditNotificationFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            mCalendar.setTimeInMillis(savedInstanceState.getLong(TIME));
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSource = new DBSource(getActivity());
-
-        if (savedInstanceState == null) {
-            mEditNotification.requestFocus();
-        }
-
-        mTime = System.currentTimeMillis();
 
         mFabDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isInputValid()) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(year, month, day,
-                            hours, min, 0);
-                    mTime = calendar.getTimeInMillis();
+                    long time = mCalendar.getTimeInMillis();
 
                     if (mNotification == null) {
                         mNotification = new Notification(PrefsManager.getInstance().getCurrentUserID(),
-                                mEditNotification.getText().toString(), mTime);
+                                mEditNotification.getText().toString(), time);
                         mNotification.setId(mSource.addNotification(mNotification));
                         getParentFragment().getFragmentManager().popBackStack();
                     } else {
                         mNotification.setText(mEditNotification.getText().toString());
-                        mNotification.setTimeInMillis(mTime);
+                        mNotification.setTimeInMillis(time);
                         mSource.updateNotification(mNotification);
                         getFragmentManager().popBackStack();
                     }
@@ -111,11 +108,9 @@ public class EditNotificationFragment extends BaseFragment {
         mEditNotification = rootView.findViewById(R.id.text);
         mFabDone = rootView.findViewById(R.id.fab_done);
 
-        dateDisplay = rootView.findViewById(R.id.TextView01);
-        pickDate = rootView.findViewById(R.id.Button01);
-
-        timeDisplay = rootView.findViewById(R.id.TextView02);
-        pickTime = rootView.findViewById(R.id.Button02);
+        mDateAndTimeDisplay = rootView.findViewById(R.id.date_and_time);
+        Button pickDate = rootView.findViewById(R.id.pick_date);
+        Button pickTime = rootView.findViewById(R.id.pick_time);
 
         readBundle(getArguments());
 
@@ -124,37 +119,16 @@ public class EditNotificationFragment extends BaseFragment {
             FRAGMENT_TITLE = "Edit notification";
             setTitle(FRAGMENT_TITLE);
             mEditNotification.setText(mNotification.getText());
-
             if (savedInstanceState == null) {
-                mEditNotification.requestFocus();
-                ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                        .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(mNotification.getTimeInMillis());
-                year = cal.get(Calendar.YEAR);
-                month = cal.get(Calendar.MONTH);
-                day = cal.get(Calendar.DAY_OF_MONTH);
-                hours = cal.get(Calendar.HOUR);
-                min = cal.get(Calendar.MINUTE);
-                updateDate();
-                updateTime();
+                showSoftKeyboard();
+                mCalendar.setTimeInMillis(mNotification.getTimeInMillis());
+                updateDisplay();
             }
         } else {
             FRAGMENT_TITLE = "New notification";
             if (savedInstanceState == null) {
-                mEditNotification.requestFocus();
-                ((InputMethodManager) getParentFragment().getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                        .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-                final Calendar cal = Calendar.getInstance();
-                year = cal.get(Calendar.YEAR);
-                month = cal.get(Calendar.MONTH);
-                day = cal.get(Calendar.DAY_OF_MONTH);
-                hours = cal.get(Calendar.HOUR);
-                min = cal.get(Calendar.MINUTE);
-                updateDate();
-                updateTime();
+                showSoftKeyboard();
+                updateDisplay();
             }
         }
 
@@ -177,14 +151,10 @@ public class EditNotificationFragment extends BaseFragment {
         return rootView;
     }
 
-    private void updateTime() {
-        timeDisplay.setText(new StringBuilder().append(hours).append(':')
-                .append(min));
-    }
-
-    private void updateDate() {
-        dateDisplay.setText(new StringBuilder().append(day).append('-')
-                .append(month + 1).append('-').append(year));
+    private void updateDisplay() {
+        mDateAndTimeDisplay.setText(
+                new SimpleDateFormat("dd.MM.yyyy hh:mm")
+                        .format(mCalendar.getTime()));
     }
 
     private DatePickerDialog.OnDateSetListener dateListener =
@@ -192,14 +162,10 @@ public class EditNotificationFragment extends BaseFragment {
                 @Override
                 public void onDateSet(DatePicker view, int yr, int monthOfYear,
                                       int dayOfMonth) {
-                    year = yr;
-                    month = monthOfYear;
-                    day = dayOfMonth;
-                    updateDate();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(year, month, day,
-                            hours, min, 0);
-                    mTime = calendar.getTimeInMillis();
+                    mCalendar.set(Calendar.YEAR, yr);
+                    mCalendar.set(Calendar.MONTH, monthOfYear);
+                    mCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    updateDisplay();
                 }
             };
 
@@ -207,28 +173,44 @@ public class EditNotificationFragment extends BaseFragment {
             new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    hours = hourOfDay;
-                    min = minute;
-                    updateTime();
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.set(year, month, day,
-                            hours, min, 0);
-                    mTime = calendar.getTimeInMillis();
+                    mCalendar.set(Calendar.HOUR, hourOfDay);
+                    mCalendar.set(Calendar.MINUTE, minute);
+                    updateDisplay();
                 }
             };
 
     protected Dialog onCreateDialog(int id) {
         switch (id) {
             case DATE_DIALOG_ID:
-                return new DatePickerDialog(getContext(), dateListener, year, month, day);
+                return new DatePickerDialog(getContext(),
+                        dateListener,
+                        mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
             case TIME_DIALOG_ID:
-                return new TimePickerDialog(getContext(), timeListener, hours, min, false);
+                return new TimePickerDialog(getContext(),
+                        timeListener,
+                        mCalendar.get(Calendar.HOUR),
+                        mCalendar.get(Calendar.MINUTE),
+                        true);
         }
         return null;
     }
 
     private boolean isInputValid() {
         return !mEditNotification.getText().toString().isEmpty()
-                && !(mTime < System.currentTimeMillis());
+                && !(mCalendar.getTimeInMillis() < System.currentTimeMillis());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(TIME, mCalendar.getTimeInMillis());
+    }
+
+    private void showSoftKeyboard() {
+        mEditNotification.requestFocus();
+        ((InputMethodManager) getParentFragment().getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
+                .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
     }
 }

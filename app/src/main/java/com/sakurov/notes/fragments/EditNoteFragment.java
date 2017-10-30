@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,7 @@ public class EditNoteFragment extends BaseFragment {
             mEditNote.setText(mNote.getText());
 
             if (savedInstanceState == null) {
+                Log.d(FRAGMENT_TITLE,"open keyboard");
                 mEditNote.requestFocus();
                 ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -98,6 +100,7 @@ public class EditNoteFragment extends BaseFragment {
             FRAGMENT_TITLE = "New note";
 
             if (savedInstanceState == null) {
+                Log.d(FRAGMENT_TITLE,"open keyboard");
                 mEditNote.requestFocus();
                 ((InputMethodManager) getParentFragment().getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
                         .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
