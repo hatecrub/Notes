@@ -4,26 +4,26 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-class DBHelper extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "notes.db";
     private static final int DB_VERSION = 1;
 
-    static final String USERS = "users";
-    static final String ID = "id";
-    static final String NAME = "name";
-    static final String PASSWORD = "password";
+    public static final String USERS = "users";
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String PASSWORD = "password";
 
-    static final String NOTES = "notes";
-    static final String USER_ID = "user_id";
-    static final String TEXT = "text";
-    static final String DATE_CREATED = "date_created";
-    static final String DATE_EDITED = "date_edited";
+    public static final String NOTES = "notes";
+    public static final String USER_ID = "user_id";
+    public static final String TEXT = "text";
+    public static final String DATE_CREATED = "date_created";
+    public static final String DATE_EDITED = "date_edited";
 
-    static final String NOTIFICATIONS = "notifications";
-    static final String TIME_NOTIFICATION = "time_notification";
+    public static final String NOTIFICATIONS = "notifications";
+    public static final String TIME_NOTIFICATION = "time_notification";
 
-    DBHelper(Context context) {
+    public DBHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 

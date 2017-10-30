@@ -1,9 +1,12 @@
 package com.sakurov.notes.helpers;
 
+import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 
 import com.sakurov.notes.entities.Item;
 import com.sakurov.notes.entities.Note;
@@ -19,9 +22,11 @@ public class DBSource {
 
     private DBHelper mHelper;
     private SQLiteDatabase mDatabase;
+    private ContentResolver mContentResolver;
 
     public DBSource(Context context) {
         this.mHelper = new DBHelper(context);
+        this.mContentResolver = context.getContentResolver();
     }
 
     private void write() {
@@ -218,5 +223,32 @@ public class DBSource {
         items.addAll(getNotes(userId));
         items.addAll(getNotifications(userId));
         return items;
+    }
+
+    public List<Note> contentProviderGetNotes(long userId) {
+        List<Note> notes = new ArrayList<>();
+        read();
+        Cursor cursor = mContentResolver
+                .query(Uri.parse("content://com.sakurov.notes/notes"),
+                        null,
+                        DBHelper.USER_ID + "=?",
+                        new String[]{"" + userId},
+                        null);
+        if (cursor.moveToFirst()) {
+            do {
+                notes.add(
+                        new Note(
+                                cursor.getInt(cursor.getColumnIndex(DBHelper.ID)),
+                                cursor.getLong(cursor.getColumnIndex(DBHelper.USER_ID)),
+                                cursor.getString(cursor.getColumnIndex(DBHelper.TEXT)),
+                                cursor.getString(cursor.getColumnIndex(DBHelper.DATE_CREATED)),
+                                cursor.getString(cursor.getColumnIndex(DBHelper.DATE_EDITED))));
+            } while (cursor.moveToNext());
+            cursor.close();
+        } else {
+            cursor.close();
+        }
+        close();
+        return notes;
     }
 }

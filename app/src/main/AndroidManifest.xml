@@ -20,6 +20,9 @@
             </intent-filter>
         </activity>
         <receiver android:name=".NotificationReceiver" />
+        <provider
+            android:authorities="com.sakurov.notes"
+            android:name=".NotesContentProvider"/>
     </application>
 
 </manifest>

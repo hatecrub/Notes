@@ -224,8 +224,13 @@ public class EditNotificationFragment extends BaseFragment {
     }
 
     private void addAlarm(Notification notification, Context context) {
+        Log.d("NOTIFIC", "" + notification.getId() + " " + notification.getTimeInMillis());
         Intent notificationIntent = new Intent(context, NotificationReceiver.class);
-        notificationIntent.putExtra("NOT", notification);
+//        notificationIntent.putExtra("NOT", notification);
+        notificationIntent.putExtra("id", notification.getId());
+        notificationIntent.putExtra("time", notification.getTimeInMillis());
+        notificationIntent.putExtra("text", notification.getText());
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 0, notificationIntent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
