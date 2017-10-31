@@ -1,13 +1,19 @@
 package com.sakurov.notes.entities;
 
+import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Note implements Parcelable, Item {
 
-    private final static long NO_TIME = -1;
+    private final static String NO_TIME = "";
+
+    @SuppressLint("SimpleDateFormat")
+    protected final static SimpleDateFormat SIMPLE_DATE =
+            new SimpleDateFormat("dd.MM.yyyy HH.mm");
 
     private long id;
     private final long userId;
@@ -26,7 +32,7 @@ public class Note implements Parcelable, Item {
     public Note(long userId, String text) {
         this.userId = userId;
         this.text = text;
-        this.dateCreated = new Date().toString();
+        this.dateCreated = SIMPLE_DATE.format(new Date());
         this.dateEdited = this.dateCreated;
     }
 
@@ -40,7 +46,7 @@ public class Note implements Parcelable, Item {
 
     public void setText(String text) {
         this.text = text;
-        this.dateEdited = new Date().toString();
+        this.dateEdited = SIMPLE_DATE.format(new Date());
     }
 
     public String getText() {
@@ -114,7 +120,7 @@ public class Note implements Parcelable, Item {
     }
 
     @Override
-    public long getItemTimeMillis() {
+    public String getItemTimeMillis() {
         return NO_TIME;
     }
 }

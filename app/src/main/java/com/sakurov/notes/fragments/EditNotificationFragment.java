@@ -149,7 +149,7 @@ public class EditNotificationFragment extends BaseFragment {
                         getFragmentManager().popBackStack();
                     }
                 } else
-                    Toast.makeText(getActivity(), R.string.empty_note, Toast.LENGTH_SHORT).show();
+                    showToast(R.string.empty_note);
             }
         });
     }

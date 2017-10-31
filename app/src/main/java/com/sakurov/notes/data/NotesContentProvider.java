@@ -1,6 +1,5 @@
 package com.sakurov.notes.data;
 
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;

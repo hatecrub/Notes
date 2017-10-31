@@ -4,7 +4,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -35,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
                 DataSource dbSource = new DataSource(this);
 
-                if (dbSource.checkUser(user)) {
+                if (dbSource.checkUserPass(user)) {
                     mPrefsManager.setCurrentUserId(dbSource.getUserId(user));
                     addAsRootFragment(NotesListFragment.newInstance());
                 } else {

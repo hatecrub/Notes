@@ -19,7 +19,6 @@ import com.sakurov.notes.fragments.NoteFragment;
 import com.sakurov.notes.fragments.NotificationFragment;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -64,7 +63,7 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 NotificationViewHolder notificationViewHolder = (NotificationViewHolder) holder;
                 notificationViewHolder.notificationText.setText(item.getItemText());
                 notificationViewHolder.notificationDateCreated.setText(item.getItemDateCreated());
-                notificationViewHolder.notificationTime.setText(new Date(item.getItemTimeMillis()).toString());
+                notificationViewHolder.notificationTime.setText(item.getItemTimeMillis());
                 if (holder.getItemViewType() == Item.NOTIFICATION_OUTDATED) {
                     notificationViewHolder.notificationTime.
                             setPaintFlags(notificationViewHolder.notificationTime.getPaintFlags() |

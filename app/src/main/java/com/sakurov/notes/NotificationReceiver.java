@@ -13,23 +13,26 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Notification.Builder builder = new Notification.Builder(context);
+
         com.sakurov.notes.entities.Notification notification = intent
                 .getBundleExtra(EditNotificationFragment.NOTIFICATION)
                 .getParcelable(EditNotificationFragment.NOTIFICATION);
 
-        Notification.Builder builder = new Notification.Builder(context);
-
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(notification.getTimeInMillis())
                 .setSmallIcon(R.drawable.ic_notifications_active_white_48dp)
                 .setContentTitle(context.getString(R.string.title_alert_notification))
-                .setContentText(notification.getText())
                 .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_SOUND)
                 .setContentInfo(context.getString(R.string.alert_info));
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
+        if (notificationManager != null && notification != null) {
+            builder.setWhen(notification.getTimeInMillis())
+                    .setContentText(notification.getText());
+
             notificationManager.notify((int) notification.getId(), builder.build());
         }
     }

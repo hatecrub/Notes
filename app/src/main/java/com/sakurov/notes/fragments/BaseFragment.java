@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.sakurov.notes.MainActivity;
 import com.sakurov.notes.R;
@@ -64,5 +65,9 @@ abstract class BaseFragment extends Fragment {
         if (inputMethodManager != null) {
             inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
+    }
+
+    protected void showToast(int stringId) {
+        Toast.makeText(getActivity(), getString(stringId), Toast.LENGTH_SHORT).show();
     }
 }

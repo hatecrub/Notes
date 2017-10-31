@@ -12,5 +12,5 @@ public interface Item {
 
     String getItemDateCreated();
 
-    long getItemTimeMillis();
+    String getItemTimeMillis();
 }

@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
@@ -60,29 +59,27 @@ public class AuthFragment extends BaseFragment {
                             mUserPassword.getText().toString());
                     switch (mAction) {
                         case IN: {
-                            if (mSource.checkUser(user)) {
+                            if (mSource.checkUserPass(user)) {
                                 user.setId(mSource.getUserId(user));
-                                PrefsManager.getInstance().setCurrentUser(user, mRememberCheck.isChecked());
-                                addAsRootFragment(NotesListFragment.newInstance());
+                                setUserAndReplace(user);
                             } else {
-                                Toast.makeText(getActivity(),
-                                        R.string.user_dont_exist,
-                                        Toast.LENGTH_SHORT)
-                                        .show();
+                                showToast(R.string.user_dont_exist);
                             }
                             break;
                         }
                         case UP: {
-                            user.setId(mSource.addUser(user));
-                            PrefsManager.getInstance().setCurrentUser(user, mRememberCheck.isChecked());
-                            addAsRootFragment(NotesListFragment.newInstance());
+                            if (!mSource.isUserExist(user)) {
+                                user.setId(mSource.addUser(user));
+                                setUserAndReplace(user);
+                            } else {
+                                showToast(R.string.user_exist);
+                            }
                             break;
                         }
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.field_empty, Toast.LENGTH_SHORT).show();
+                    showToast(R.string.field_empty);
                 }
-
             }
         });
     }
@@ -118,5 +115,10 @@ public class AuthFragment extends BaseFragment {
 
     private boolean isInputValid() {
         return !(mUserName.getText().toString().isEmpty() || mUserPassword.getText().toString().isEmpty());
+    }
+
+    private void setUserAndReplace(User user) {
+        PrefsManager.getInstance().setCurrentUser(user, mRememberCheck.isChecked());
+        addAsRootFragment(NotesListFragment.newInstance());
     }
 }

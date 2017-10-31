@@ -21,14 +21,21 @@ public class ViewPagerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.viewpager_fragment, container, false);
-        setTitle(getString(R.string.title_add));
+
         ViewPager viewPager = rootView.findViewById(R.id.view_pager);
-        viewPager.setAdapter(new PagerAdapter(getChildFragmentManager()));
+        viewPager.setAdapter(new PagerAdapter(getChildFragmentManager(), getContext()));
+
+        setTitle(getString(R.string.title_add));
+
+        return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if (savedInstanceState == null) {
             showSoftKeyboard(null);
         }
-
-        return rootView;
     }
 }

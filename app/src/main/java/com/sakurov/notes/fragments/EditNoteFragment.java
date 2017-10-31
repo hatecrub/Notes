@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
@@ -92,7 +91,7 @@ public class EditNoteFragment extends BaseFragment {
                         getFragmentManager().popBackStack();
                     }
                 } else
-                    Toast.makeText(getActivity(), R.string.empty_note, Toast.LENGTH_SHORT).show();
+                    showToast(R.string.empty_note);
             }
         });
     }

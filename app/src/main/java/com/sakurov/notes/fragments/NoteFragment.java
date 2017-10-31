@@ -45,6 +45,8 @@ public class NoteFragment extends BaseFragment {
 
         readBundle(getArguments());
 
+        setTitle(getString(R.string.title_note));
+
         fabEditNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +66,6 @@ public class NoteFragment extends BaseFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        setTitle(getString(R.string.title_note));
         super.onActivityCreated(savedInstanceState);
         enableLogOutMenuItem(true);
     }

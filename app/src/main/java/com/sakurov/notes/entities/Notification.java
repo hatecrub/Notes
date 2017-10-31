@@ -3,6 +3,10 @@ package com.sakurov.notes.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sakurov.notes.data.DataSource;
+
+import java.util.Date;
+
 public class Notification extends Note implements Parcelable, Item {
 
     private long timeInMillis;
@@ -76,7 +80,7 @@ public class Notification extends Note implements Parcelable, Item {
     }
 
     @Override
-    public long getItemTimeMillis() {
-        return getTimeInMillis();
+    public String getItemTimeMillis() {
+        return SIMPLE_DATE.format(new Date(getTimeInMillis()));
     }
 }
