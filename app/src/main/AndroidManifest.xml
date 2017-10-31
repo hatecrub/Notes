@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sakurov.notes">
 
+    <permission android:name="com.sakurov.notes.data.NotesContentProvider.READ_PERMISSION" />
+
     <application
         android:name=".NotesApp"
         android:allowBackup="true"
@@ -21,8 +23,10 @@
         </activity>
         <receiver android:name=".NotificationReceiver" />
         <provider
+            android:name=".data.NotesContentProvider"
             android:authorities="com.sakurov.notes"
-            android:name=".data.NotesContentProvider"/>
+            android:exported="true"
+            android:readPermission="com.sakurov.notes.data.NotesContentProvider.READ_PERMISSION" />
     </application>
 
 </manifest>
