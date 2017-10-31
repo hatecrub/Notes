@@ -11,16 +11,20 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.sakurov.notes.R;
 import com.sakurov.notes.data.NotesContract.Entry;
+import com.sakurov.notes.data.DBHelper.Schema;
 
 public class NotesContentProvider extends ContentProvider {
 
-    public final static int USERS = 100;
+    private final static int USERS = 100;
     public final static int NOTES = 200;
     public final static int NOTE_ID = 201;
     public final static int NOTIFICATIONS = 300;
     public final static int NOTIFICATION_ID = 301;
+
+    private final static String Q = "=?";
+    private final static String ID = "/#";
+    private final static String UNKNOWN_URI = "Cannot query unknown URI: ";
 
     private static final UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -30,8 +34,8 @@ public class NotesContentProvider extends ContentProvider {
         sUriMatcher.addURI(Entry.AUTHORITY, Entry.USERS_PATH, USERS);
         sUriMatcher.addURI(Entry.AUTHORITY, Entry.NOTES_PATH, NOTES);
         sUriMatcher.addURI(Entry.AUTHORITY, Entry.NOTIFICATIONS_PATH, NOTIFICATIONS);
-        sUriMatcher.addURI(Entry.AUTHORITY, Entry.NOTES_PATH + "/#", NOTE_ID);
-        sUriMatcher.addURI(Entry.AUTHORITY, Entry.NOTIFICATIONS_PATH + "/#", NOTIFICATION_ID);
+        sUriMatcher.addURI(Entry.AUTHORITY, Entry.NOTES_PATH + ID, NOTE_ID);
+        sUriMatcher.addURI(Entry.AUTHORITY, Entry.NOTIFICATIONS_PATH + ID, NOTIFICATION_ID);
     }
 
     @Override
@@ -49,22 +53,22 @@ public class NotesContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case USERS:
-                return database.query(DBHelper.USERS,
+                return database.query(Schema.USERS,
                         projection, selection,
                         selectionArgs, null, null, sortOrder);
 
             case NOTES:
-                return database.query(DBHelper.NOTES,
+                return database.query(Schema.NOTES,
                         projection, selection,
                         selectionArgs, null, null, sortOrder);
 
             case NOTIFICATIONS:
-                return database.query(DBHelper.NOTIFICATIONS,
+                return database.query(Schema.NOTIFICATIONS,
                         projection, selection,
                         selectionArgs, null, null, sortOrder);
 
             default:
-                throw new IllegalArgumentException(getContext().getString(R.string.error_unknown_uri) + uri);
+                throw new IllegalArgumentException(UNKNOWN_URI + uri);
         }
     }
 
@@ -74,16 +78,16 @@ public class NotesContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case USERS: {
-                return insertToTable(DBHelper.USERS, uri, values);
+                return insertToTable(Schema.USERS, uri, values);
             }
             case NOTES: {
-                return insertToTable(DBHelper.NOTES, uri, values);
+                return insertToTable(Schema.NOTES, uri, values);
             }
             case NOTIFICATIONS: {
-                return insertToTable(DBHelper.NOTIFICATIONS, uri, values);
+                return insertToTable(Schema.NOTIFICATIONS, uri, values);
             }
             default: {
-                throw new IllegalArgumentException(getContext().getString(R.string.error_unknown_uri) + uri);
+                throw new IllegalArgumentException(UNKNOWN_URI + uri);
             }
         }
     }
@@ -93,17 +97,17 @@ public class NotesContentProvider extends ContentProvider {
         int match = sUriMatcher.match(uri);
         switch (match) {
             case NOTE_ID: {
-                selection = DBHelper.ID + "=?";
+                selection = Schema.ID + Q;
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return updateItem(DBHelper.NOTES, values, selection, selectionArgs);
+                return updateItem(Schema.NOTES, values, selection, selectionArgs);
             }
             case NOTIFICATION_ID: {
-                selection = DBHelper.ID + "=?";
+                selection = Schema.ID + Q;
                 selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
-                return updateItem(DBHelper.NOTIFICATIONS, values, selection, selectionArgs);
+                return updateItem(Schema.NOTIFICATIONS, values, selection, selectionArgs);
             }
             default: {
-                throw new IllegalArgumentException(getContext().getString(R.string.error_unknown_uri) + uri);
+                throw new IllegalArgumentException(UNKNOWN_URI + uri);
             }
         }
     }

@@ -23,7 +23,7 @@ public class ChooseFragment extends BaseFragment implements View.OnClickListener
         Button signInButton = rootView.findViewById(R.id.sign_in);
         Button signUpButton = rootView.findViewById(R.id.sign_up);
 
-        setTitle("Notes");
+        setTitle(getString(R.string.title_notes));
 
         signInButton.setOnClickListener(this);
         signUpButton.setOnClickListener(this);

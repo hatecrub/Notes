@@ -36,13 +36,6 @@ public class NotificationFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        setTitle("Notification");
-        super.onActivityCreated(savedInstanceState);
-        enableLogOutMenuItem(true);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,6 +50,8 @@ public class NotificationFragment extends BaseFragment {
         FloatingActionButton fabEditNote = rootView.findViewById(R.id.fab_edit);
 
         readBundle(getArguments());
+
+        setTitle(getString(R.string.title_notification));
 
         fabEditNote.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,5 +69,11 @@ public class NotificationFragment extends BaseFragment {
         notificationDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNotification.getDateEdited()));
         notificationTime.setText(String.format("%s%s", getString(R.string.time), new Date(mNotification.getTimeInMillis()).toString()));
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        enableLogOutMenuItem(true);
     }
 }

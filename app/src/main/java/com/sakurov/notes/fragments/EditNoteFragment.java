@@ -1,15 +1,12 @@
 package com.sakurov.notes.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -23,20 +20,17 @@ public class EditNoteFragment extends BaseFragment {
     private EditText mEditNote;
     FloatingActionButton mFabDone;
     private Note mNote;
-    private DataSource mSource;
+    private DataSource mDataSource;
 
     public static EditNoteFragment newInstance() {
         return new EditNoteFragment();
     }
 
     public static EditNoteFragment newInstance(Note note) {
-
         Bundle bundle = new Bundle();
         bundle.putParcelable(NOTE, note);
-
         EditNoteFragment fragment = new EditNoteFragment();
         fragment.setArguments(bundle);
-
         return fragment;
     }
 
@@ -44,32 +38,6 @@ public class EditNoteFragment extends BaseFragment {
         if (bundle != null) {
             mNote = bundle.getParcelable(NOTE);
         }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mSource = new DataSource(getActivity());
-
-        mFabDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isInputValid()) {
-                    if (mNote == null) {
-                        mNote = new Note(PrefsManager.getInstance().getCurrentUserID(),
-                                mEditNote.getText().toString());
-                        mNote.setId(mSource.addNote(mNote));
-                        getParentFragment().getFragmentManager().popBackStack();
-                    } else {
-                        mNote.setText(mEditNote.getText().toString());
-                        mSource.updateNote(mNote);
-                        getFragmentManager().popBackStack();
-                    }
-                } else
-                    Toast.makeText(getActivity(), R.string.empty_note, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Nullable
@@ -85,14 +53,14 @@ public class EditNoteFragment extends BaseFragment {
 
         String FRAGMENT_TITLE;
         if (mNote != null) {
-            FRAGMENT_TITLE = "Edit note";
+            FRAGMENT_TITLE = getString(R.string.title_edit_note);
             setTitle(FRAGMENT_TITLE);
             mEditNote.setText(mNote.getText());
             if (savedInstanceState == null) {
-                showSoftKeyboard();
+                showSoftKeyboard(mEditNote);
             }
         } else {
-            FRAGMENT_TITLE = "New note";
+            FRAGMENT_TITLE = getString(R.string.title_new_note);
             if (savedInstanceState == null) {
                 mEditNote.requestFocus();
             }
@@ -103,14 +71,33 @@ public class EditNoteFragment extends BaseFragment {
         return rootView;
     }
 
-    private boolean isInputValid() {
-        return !mEditNote.getText().toString().isEmpty();
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        mDataSource = new DataSource(getActivity());
+
+        mFabDone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isInputValid()) {
+                    if (mNote == null) {
+                        mNote = new Note(PrefsManager.getInstance().getCurrentUserID(),
+                                mEditNote.getText().toString());
+                        mNote.setId(mDataSource.addNote(mNote));
+                        getParentFragment().getFragmentManager().popBackStack();
+                    } else {
+                        mNote.setText(mEditNote.getText().toString());
+                        mDataSource.updateNote(mNote);
+                        getFragmentManager().popBackStack();
+                    }
+                } else
+                    Toast.makeText(getActivity(), R.string.empty_note, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void showSoftKeyboard() {
-        mEditNote.requestFocus();
-        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        Log.d(this.getClass().getSimpleName(), "open keyboard");
+    private boolean isInputValid() {
+        return !mEditNote.getText().toString().isEmpty();
     }
 }

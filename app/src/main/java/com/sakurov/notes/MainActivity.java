@@ -95,10 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setActionBarTitle(String title) {
-        try {
+        if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(title);
-        } catch (NullPointerException e) {
-            Log.d(this.getClass().getSimpleName(), "No ActionBar to set title!");
-        }
     }
 }

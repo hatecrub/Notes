@@ -1,6 +1,5 @@
 package com.sakurov.notes.adapters;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,7 +11,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     private String tabTitles[] = new String[]{"New Note", "New Notification"};
 
-    public PagerAdapter(FragmentManager fm, Context context) {
+    public PagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -35,7 +34,6 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        // Generate title based on item position
         return tabTitles[position];
     }
 }

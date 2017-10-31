@@ -19,25 +19,10 @@ import java.util.List;
 
 public class NotesListFragment extends BaseFragment {
 
-    //    private NotesRecyclerAdapter mNotesRecyclerAdapter;
     private ItemsRecyclerAdapter mItemsRecyclerAdapter;
 
     public static NotesListFragment newInstance() {
         return new NotesListFragment();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        setTitle("My notes");
-        super.onActivityCreated(savedInstanceState);
-
-        DataSource dbSource = new DataSource(getActivity());
-//        List<Note> notes = dbSource.getNotes(PrefsManager.getInstance().getCurrentUserID());
-//        mNotesRecyclerAdapter.updateList(notes);
-        List<Item> items = dbSource.getAllRecords(PrefsManager.getInstance().getCurrentUserID());
-        mItemsRecyclerAdapter.updateList(items);
-
-        enableLogOutMenuItem(true);
     }
 
     @Nullable
@@ -45,13 +30,14 @@ public class NotesListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_notes_list, container, false);
+
         RecyclerView notesRecycler = rootView.findViewById(R.id.notes_list);
         notesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-//        mNotesRecyclerAdapter = new NotesRecyclerAdapter(getFragmentManager());
-//        notesRecycler.setAdapter(mNotesRecyclerAdapter);
         mItemsRecyclerAdapter = new ItemsRecyclerAdapter(getFragmentManager());
         notesRecycler.setAdapter(mItemsRecyclerAdapter);
+
+        setTitle(getString(R.string.title_my_notes));
 
         FloatingActionButton fabAddNote = rootView.findViewById(R.id.fab);
         fabAddNote.setOnClickListener(new View.OnClickListener() {
@@ -64,4 +50,14 @@ public class NotesListFragment extends BaseFragment {
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        DataSource dbSource = new DataSource(getActivity());
+        List<Item> items = dbSource.getAllRecords(PrefsManager.getInstance().getCurrentUserID());
+        mItemsRecyclerAdapter.updateList(items);
+
+        enableLogOutMenuItem(true);
+    }
 }

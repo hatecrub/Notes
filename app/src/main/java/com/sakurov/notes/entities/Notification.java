@@ -27,7 +27,7 @@ public class Notification extends Note implements Parcelable, Item {
 
 //--------------------------------Parcelable implementation-----------------------------------------
 
-    protected Notification(Parcel in) {
+    private Notification(Parcel in) {
         super(in);
         timeInMillis = in.readLong();
     }

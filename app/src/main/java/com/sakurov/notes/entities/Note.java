@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class Note implements Parcelable, Item {
 
+    private final static long NO_TIME = -1;
+
     private long id;
     private final long userId;
     private String text;
@@ -59,7 +61,7 @@ public class Note implements Parcelable, Item {
 
 //--------------------------------Parcelable implementation-----------------------------------------
 
-    protected Note(Parcel in) {
+    Note(Parcel in) {
         id = in.readLong();
         userId = in.readLong();
         text = in.readString();
@@ -113,6 +115,6 @@ public class Note implements Parcelable, Item {
 
     @Override
     public long getItemTimeMillis() {
-        return -1;
+        return NO_TIME;
     }
 }

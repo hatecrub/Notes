@@ -4,13 +4,9 @@ import android.app.Application;
 
 import com.sakurov.notes.utils.PrefsManager;
 
-/**
- * Created by sakurov on 26.10.17.
- */
-
 public class NotesApp extends Application {
 
-    private PrefsManager mPrefManager;
+    PrefsManager mPrefManager;
 
     @Override
     public void onCreate() {

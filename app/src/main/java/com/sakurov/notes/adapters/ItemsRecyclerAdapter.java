@@ -39,7 +39,7 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
-            case 1:
+            case Item.NOTE:
                 return new NoteViewHolder(LayoutInflater.
                         from(parent.getContext()).
                         inflate(R.layout.item_note, parent, false));
@@ -54,7 +54,7 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Item item = mItems.get(position);
         switch (holder.getItemViewType()) {
-            case 1: {
+            case Item.NOTE: {
                 NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
                 noteViewHolder.noteText.setText(item.getItemText());
                 noteViewHolder.noteDateCreated.setText(item.getItemDateCreated());

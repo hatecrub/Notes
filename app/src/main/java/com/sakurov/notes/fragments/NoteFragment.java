@@ -17,7 +17,6 @@ public class NoteFragment extends BaseFragment {
     private Note mNote;
 
     public static NoteFragment newInstance(Note note) {
-
         Bundle bundle = new Bundle();
         bundle.putParcelable(NOTE, note);
 
@@ -33,13 +32,6 @@ public class NoteFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        setTitle("Note");
-        super.onActivityCreated(savedInstanceState);
-        enableLogOutMenuItem(true);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,7 +41,6 @@ public class NoteFragment extends BaseFragment {
         TextView noteAuthor = rootView.findViewById(R.id.author);
         TextView noteDateCreated = rootView.findViewById(R.id.created);
         TextView noteDateEdited = rootView.findViewById(R.id.edited);
-
         FloatingActionButton fabEditNote = rootView.findViewById(R.id.fab_edit);
 
         readBundle(getArguments());
@@ -69,5 +60,12 @@ public class NoteFragment extends BaseFragment {
         noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
         noteDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNote.getDateEdited()));
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        setTitle(getString(R.string.title_note));
+        super.onActivityCreated(savedInstanceState);
+        enableLogOutMenuItem(true);
     }
 }

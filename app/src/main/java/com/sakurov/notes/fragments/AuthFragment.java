@@ -1,12 +1,10 @@
 package com.sakurov.notes.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -50,7 +48,7 @@ public class AuthFragment extends BaseFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        setTitle("Authentication");
+        setTitle(getString(R.string.title_auth));
         super.onActivityCreated(savedInstanceState);
         mSource = new DataSource(getActivity());
 
@@ -60,7 +58,6 @@ public class AuthFragment extends BaseFragment {
                 if (isInputValid()) {
                     User user = new User(mUserName.getText().toString(),
                             mUserPassword.getText().toString());
-
                     switch (mAction) {
                         case IN: {
                             if (mSource.checkUser(user)) {
@@ -102,9 +99,7 @@ public class AuthFragment extends BaseFragment {
         readBundle(getArguments());
 
         if (savedInstanceState == null) {
-            mUserName.requestFocus();
-            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE))
-                    .toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            showSoftKeyboard(mUserName);
         }
 
         switch (mAction) {
