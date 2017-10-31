@@ -16,6 +16,8 @@ import com.sakurov.notes.utils.PrefsManager;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String ORIENTATION_CHANGED = "orientation_changed";
+
     PrefsManager mPrefsManager;
 
     private boolean mLogOffEnabled = false;
@@ -90,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean("orientation", true);
+        outState.putBoolean(ORIENTATION_CHANGED, true);
     }
 
     public void setActionBarTitle(String title) {
