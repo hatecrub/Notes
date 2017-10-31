@@ -2,6 +2,8 @@ package com.sakurov.notes;
 
 import android.app.Application;
 
+import com.sakurov.notes.utils.PrefsManager;
+
 /**
  * Created by sakurov on 26.10.17.
  */

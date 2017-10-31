@@ -20,4 +20,6 @@
     <string name="date_button">Pick date</string>
     <string name="time_text">Current time</string>
     <string name="time_button">Pick time</string>
+
+    <string name="error_unknown_uri">Cannot query unknown URI</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.sakurov.notes;
+package com.sakurov.notes.adapters;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;

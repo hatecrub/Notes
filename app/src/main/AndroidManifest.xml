@@ -22,7 +22,7 @@
         <receiver android:name=".NotificationReceiver" />
         <provider
             android:authorities="com.sakurov.notes"
-            android:name=".NotesContentProvider"/>
+            android:name=".data.NotesContentProvider"/>
     </application>
 
 </manifest>

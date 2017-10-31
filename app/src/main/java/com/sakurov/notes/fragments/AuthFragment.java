@@ -12,10 +12,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.sakurov.notes.PrefsManager;
+import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.User;
-import com.sakurov.notes.helpers.DBSource;
+import com.sakurov.notes.data.DataSource;
 
 public class AuthFragment extends BaseFragment {
 
@@ -24,7 +24,7 @@ public class AuthFragment extends BaseFragment {
 
     private final static String ACTION = "action";
 
-    private DBSource mSource;
+    private DataSource mSource;
     private EditText mUserName, mUserPassword;
     private Button mActionButton;
     private CheckBox mRememberCheck;
@@ -52,7 +52,7 @@ public class AuthFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         setTitle("Authentication");
         super.onActivityCreated(savedInstanceState);
-        mSource = new DBSource(getActivity());
+        mSource = new DataSource(getActivity());
 
         mActionButton.setOnClickListener(new View.OnClickListener() {
             @Override

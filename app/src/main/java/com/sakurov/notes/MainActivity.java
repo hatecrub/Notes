@@ -12,7 +12,8 @@ import android.widget.Toast;
 import com.sakurov.notes.entities.User;
 import com.sakurov.notes.fragments.ChooseFragment;
 import com.sakurov.notes.fragments.NotesListFragment;
-import com.sakurov.notes.helpers.DBSource;
+import com.sakurov.notes.data.DataSource;
+import com.sakurov.notes.utils.PrefsManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
             if (mPrefsManager.isUserRemembered()) {
                 User user = mPrefsManager.getCurrentUser();
 
-                DBSource dbSource = new DBSource(this);
+                DataSource dbSource = new DataSource(this);
 
                 if (dbSource.checkUser(user)) {
                     mPrefsManager.setCurrentUserId(dbSource.getUserId(user));

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sakurov.notes.PrefsManager;
+import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 

@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.sakurov.notes.PagerAdapter;
+import com.sakurov.notes.adapters.PagerAdapter;
 import com.sakurov.notes.R;
 
 public class ViewPagerFragment extends BaseFragment {

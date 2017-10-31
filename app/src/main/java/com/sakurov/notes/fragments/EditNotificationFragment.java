@@ -24,10 +24,10 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.sakurov.notes.NotificationReceiver;
-import com.sakurov.notes.PrefsManager;
+import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Notification;
-import com.sakurov.notes.helpers.DBSource;
+import com.sakurov.notes.data.DataSource;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,7 +38,7 @@ public class EditNotificationFragment extends BaseFragment {
 
     private EditText mEditNotification;
     private Notification mNotification;
-    private DBSource mSource;
+    private DataSource mSource;
     private FloatingActionButton mFabDone;
     private TextInputLayout mTextIn;
 
@@ -80,7 +80,7 @@ public class EditNotificationFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mSource = new DBSource(getActivity());
+        mSource = new DataSource(getActivity());
 
         mFabDone.setOnClickListener(new View.OnClickListener() {
             @Override

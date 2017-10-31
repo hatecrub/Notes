@@ -1,4 +1,4 @@
-package com.sakurov.notes.helpers;
+package com.sakurov.notes.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

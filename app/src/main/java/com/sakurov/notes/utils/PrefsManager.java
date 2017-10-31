@@ -1,4 +1,4 @@
-package com.sakurov.notes;
+package com.sakurov.notes.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

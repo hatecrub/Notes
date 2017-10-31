@@ -1,6 +1,5 @@
-package com.sakurov.notes;
+package com.sakurov.notes.adapters;
 
-import android.content.Context;
 import android.graphics.Paint;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Item;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.Notification;
@@ -25,11 +25,9 @@ import java.util.List;
 public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Item> mItems = new ArrayList<>();
-    private Context mContext;
     private FragmentManager mFragmentManager;
 
-    public ItemsRecyclerAdapter(Context context, FragmentManager fragmentManager) {
-        mContext = context;
+    public ItemsRecyclerAdapter(FragmentManager fragmentManager) {
         mFragmentManager = fragmentManager;
     }
 

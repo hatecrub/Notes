@@ -13,17 +13,17 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.sakurov.notes.PrefsManager;
+import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
-import com.sakurov.notes.helpers.DBSource;
+import com.sakurov.notes.data.DataSource;
 
 public class EditNoteFragment extends BaseFragment {
 
     private EditText mEditNote;
     FloatingActionButton mFabDone;
     private Note mNote;
-    private DBSource mSource;
+    private DataSource mSource;
 
     public static EditNoteFragment newInstance() {
         return new EditNoteFragment();
@@ -50,7 +50,7 @@ public class EditNoteFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mSource = new DBSource(getActivity());
+        mSource = new DataSource(getActivity());
 
         mFabDone.setOnClickListener(new View.OnClickListener() {
             @Override
