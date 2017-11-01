@@ -29,6 +29,10 @@ public class Notification extends Note implements Parcelable, Item {
         this.timeInMillis = timeInMillis;
     }
 
+    public String getTime() {
+        return SIMPLE_DATE.format(new Date(getTimeInMillis()));
+    }
+
 //--------------------------------Parcelable implementation-----------------------------------------
 
     private Notification(Parcel in) {
@@ -67,20 +71,5 @@ public class Notification extends Note implements Parcelable, Item {
         if (System.currentTimeMillis() > getTimeInMillis()) {
             return Item.NOTIFICATION_OUTDATED;
         } else return Item.NOTIFICATION;
-    }
-
-    @Override
-    public String getItemText() {
-        return getText();
-    }
-
-    @Override
-    public String getItemDateCreated() {
-        return getDateCreated();
-    }
-
-    @Override
-    public String getItemTimeMillis() {
-        return SIMPLE_DATE.format(new Date(getTimeInMillis()));
     }
 }

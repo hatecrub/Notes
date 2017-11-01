@@ -7,10 +7,4 @@ public interface Item {
     int NOTIFICATION_OUTDATED = 3;
 
     int getItemType();
-
-    String getItemText();
-
-    String getItemDateCreated();
-
-    String getItemTimeMillis();
 }

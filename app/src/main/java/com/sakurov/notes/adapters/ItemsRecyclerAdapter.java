@@ -51,28 +51,7 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Item item = mItems.get(position);
-        switch (holder.getItemViewType()) {
-            case Item.NOTE: {
-                NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
-                noteViewHolder.noteText.setText(item.getItemText());
-                noteViewHolder.noteDateCreated.setText(item.getItemDateCreated());
-                break;
-            }
-            default: {
-                NotificationViewHolder notificationViewHolder = (NotificationViewHolder) holder;
-                notificationViewHolder.notificationText.setText(item.getItemText());
-                notificationViewHolder.notificationDateCreated.setText(item.getItemDateCreated());
-                notificationViewHolder.notificationTime.setText(item.getItemTimeMillis());
-                if (holder.getItemViewType() == Item.NOTIFICATION_OUTDATED) {
-                    notificationViewHolder.notificationTime.
-                            setPaintFlags(notificationViewHolder.notificationTime.getPaintFlags() |
-                                    Paint.STRIKE_THRU_TEXT_FLAG);
-                    notificationViewHolder.notificationIcon.setImageResource(R.drawable.ic_notifications_black_48dp);
-                }
-                break;
-            }
-        }
+        ((BaseViewHolder) holder).bind(mItems.get(position));
     }
 
     @Override
@@ -85,7 +64,23 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
         return mItems.get(position).getItemType();
     }
 
-    private class NoteViewHolder extends RecyclerView.ViewHolder {
+    private void replaceFragment(int position) {
+        int itemType = mItems.get(position).getItemType();
+
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+
+        if (itemType == Item.NOTE)
+            transaction.replace(R.id.container,
+                    NoteFragment.newInstance((Note) mItems.get(position)));
+        else
+            transaction.replace(R.id.container,
+                    NotificationFragment.newInstance((Notification) mItems.get(position)));
+
+        transaction.addToBackStack(NoteFragment.class.getSimpleName())
+                .commit();
+    }
+
+    private class NoteViewHolder extends BaseViewHolder {
 
         LinearLayout rootView;
         TextView noteText;
@@ -104,9 +99,16 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             });
         }
+
+        @Override
+        public void bind(Item item) {
+            Note note = (Note) item;
+            noteText.setText(note.getText());
+            noteDateCreated.setText(note.getDateCreated());
+        }
     }
 
-    private class NotificationViewHolder extends RecyclerView.ViewHolder {
+    private class NotificationViewHolder extends BaseViewHolder {
 
         LinearLayout rootView;
         TextView notificationText;
@@ -129,21 +131,28 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             });
         }
+
+        @Override
+        public void bind(Item item) {
+            Notification notification = (Notification) item;
+            notificationText.setText(notification.getText());
+            notificationDateCreated.setText(notification.getDateCreated());
+            notificationTime.setText(notification.getTime());
+            if (this.getItemViewType() == Item.NOTIFICATION_OUTDATED) {
+                notificationTime.
+                        setPaintFlags(notificationTime.getPaintFlags() |
+                                Paint.STRIKE_THRU_TEXT_FLAG);
+                notificationIcon.setImageResource(R.drawable.ic_notifications_black_48dp);
+            }
+        }
     }
 
-    private void replaceFragment(int position) {
-        int itemType = mItems.get(position).getItemType();
+    abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        BaseViewHolder(View itemView) {
+            super(itemView);
+        }
 
-        if (itemType == Item.NOTE)
-            transaction.replace(R.id.container,
-                    NoteFragment.newInstance((Note) mItems.get(position)));
-        else
-            transaction.replace(R.id.container,
-                    NotificationFragment.newInstance((Notification) mItems.get(position)));
-
-        transaction.addToBackStack(NoteFragment.class.getSimpleName())
-                .commit();
+        abstract void bind(Item item);
     }
 }

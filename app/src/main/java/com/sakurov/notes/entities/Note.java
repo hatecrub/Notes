@@ -108,19 +108,4 @@ public class Note implements Parcelable, Item {
     public int getItemType() {
         return Item.NOTE;
     }
-
-    @Override
-    public String getItemText() {
-        return getText();
-    }
-
-    @Override
-    public String getItemDateCreated() {
-        return getDateCreated();
-    }
-
-    @Override
-    public String getItemTimeMillis() {
-        return NO_TIME;
-    }
 }
