@@ -85,10 +85,14 @@ public class EditNoteFragment extends BaseFragment {
                                 mEditNote.getText().toString());
                         mNote.setId(mDataSource.addNote(mNote));
                         getParentFragment().getFragmentManager().popBackStack();
+                        if (getParentFragment().getFragmentManager().getBackStackEntryCount() > 1) {
+                            showLandContainer();
+                        }
                     } else {
                         mNote.setText(mEditNote.getText().toString());
                         mDataSource.updateNote(mNote);
                         getFragmentManager().popBackStack();
+                        showLandContainer();
                     }
                 } else
                     showToast(R.string.empty_note);

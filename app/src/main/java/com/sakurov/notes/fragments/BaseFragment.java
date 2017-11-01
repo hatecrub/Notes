@@ -19,6 +19,7 @@ abstract class BaseFragment extends Fragment {
     public static final String NOTIFICATION = "notification";
 
     private String FRAGMENT_TITLE;
+    private MainActivity mainActivity;
 
     void replaceFragment(Fragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -36,18 +37,17 @@ abstract class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        mainActivity = (MainActivity) getActivity();
         if (FRAGMENT_TITLE != null)
             setActionBarTitle(FRAGMENT_TITLE);
         enableLogOutMenuItem(false);
     }
 
     protected void enableLogOutMenuItem(boolean flag) {
-        MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setLogOffEnabled(flag);
     }
 
     protected void setActionBarTitle(String title) {
-        MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.setActionBarTitle(title);
     }
 
@@ -69,5 +69,17 @@ abstract class BaseFragment extends Fragment {
 
     protected void showToast(int stringId) {
         Toast.makeText(getActivity(), getString(stringId), Toast.LENGTH_SHORT).show();
+    }
+
+    public void showLandContainer() {
+        mainActivity.showContainerLand();
+    }
+
+    public void hideLandContainer() {
+        mainActivity.hideContainerLand();
+    }
+
+    public boolean isLand() {
+        return mainActivity.isLand();
     }
 }

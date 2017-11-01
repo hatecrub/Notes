@@ -141,12 +141,16 @@ public class EditNotificationFragment extends BaseFragment {
                         mNotification.setId(mSource.addNotification(mNotification));
                         addAlarm(mNotification, getParentFragment().getActivity().getApplicationContext());
                         getParentFragment().getFragmentManager().popBackStack();
+                        if (getParentFragment().getFragmentManager().getBackStackEntryCount() > 1) {
+                            showLandContainer();
+                        }
                     } else {
                         mNotification.setText(mEditNotification.getText().toString());
                         mNotification.setTimeInMillis(time);
                         mSource.updateNotification(mNotification);
                         addAlarm(mNotification, getActivity().getApplicationContext());
                         getFragmentManager().popBackStack();
+                        showLandContainer();
                     }
                 } else
                     showToast(R.string.empty_note);

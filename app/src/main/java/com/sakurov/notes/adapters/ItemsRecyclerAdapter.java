@@ -1,8 +1,8 @@
 package com.sakurov.notes.adapters;
 
 import android.graphics.Paint;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +16,7 @@ import com.sakurov.notes.entities.Item;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.Notification;
 import com.sakurov.notes.fragments.NoteFragment;
+import com.sakurov.notes.fragments.NotesListFragment;
 import com.sakurov.notes.fragments.NotificationFragment;
 
 import java.util.ArrayList;
@@ -25,14 +26,18 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private List<Item> mItems = new ArrayList<>();
     private FragmentManager mFragmentManager;
+    private boolean isLand = false;
+    private NotesListFragment fragment;
 
-    public ItemsRecyclerAdapter(FragmentManager fragmentManager) {
+    public ItemsRecyclerAdapter(FragmentManager fragmentManager, NotesListFragment fragment) {
         mFragmentManager = fragmentManager;
+        this.fragment = fragment;
     }
 
-    public void updateList(List<Item> items) {
+    public void updateList(List<Item> items, boolean isLand) {
         this.mItems = items;
         notifyDataSetChanged();
+        this.isLand = isLand;
     }
 
     @Override
@@ -65,18 +70,17 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     private void replaceFragment(int position) {
-        int itemType = mItems.get(position).getItemType();
+        fragment.showLandContainer();
 
-        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        int container = isLand ? R.id.container_land : R.id.container;
 
-        if (itemType == Item.NOTE)
-            transaction.replace(R.id.container,
-                    NoteFragment.newInstance((Note) mItems.get(position)));
-        else
-            transaction.replace(R.id.container,
-                    NotificationFragment.newInstance((Notification) mItems.get(position)));
+        Fragment fragment = (mItems.get(position).getItemType() == Item.NOTE) ?
+                NoteFragment.newInstance((Note) mItems.get(position)) :
+                NotificationFragment.newInstance((Notification) mItems.get(position));
 
-        transaction.addToBackStack(NoteFragment.class.getSimpleName())
+        mFragmentManager.beginTransaction()
+                .replace(container, fragment)
+                .addToBackStack(fragment.getClass().getSimpleName())
                 .commit();
     }
 

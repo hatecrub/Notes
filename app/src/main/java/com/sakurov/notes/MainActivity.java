@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.sakurov.notes.entities.User;
@@ -22,12 +24,20 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean mLogOffEnabled = false;
 
+    private boolean isLand = false;
+    private boolean isLandContainerShown = false;
+
+    View detailsFrame;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         mPrefsManager = PrefsManager.getInstance();
+
+        detailsFrame = findViewById(R.id.container_land);
+        isLand = detailsFrame != null;
 
         if (savedInstanceState == null) {
 
@@ -52,7 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+            getSupportFragmentManager().popBackStack();
+            hideContainerLand();
+        } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+            showContainerLand();
+        } else
+            super.onBackPressed();
     }
 
     @Override
@@ -67,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.log_out) {
             if (mLogOffEnabled) {
                 mPrefsManager.clear();
+                hideContainerLand();
                 addAsRootFragment(ChooseFragment.newInstance());
             }
         }
@@ -98,5 +116,29 @@ public class MainActivity extends AppCompatActivity {
     public void setActionBarTitle(String title) {
         if (getSupportActionBar() != null)
             getSupportActionBar().setTitle(title);
+    }
+
+    public void hideContainerLand() {
+        if (isLand && isLandContainerShown) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
+                    detailsFrame.getLayoutParams();
+            params.weight = 0.0f;
+            detailsFrame.setLayoutParams(params);
+            isLandContainerShown = false;
+        }
+    }
+
+    public void showContainerLand() {
+        if (isLand && !isLandContainerShown) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
+                    detailsFrame.getLayoutParams();
+            params.weight = 1.0f;
+            detailsFrame.setLayoutParams(params);
+            isLandContainerShown = true;
+        }
+    }
+
+    public boolean isLand() {
+        return isLand;
     }
 }

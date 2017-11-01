@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.sakurov.notes.adapters.ItemsRecyclerAdapter;
 import com.sakurov.notes.utils.PrefsManager;
@@ -34,7 +35,7 @@ public class NotesListFragment extends BaseFragment {
         RecyclerView notesRecycler = rootView.findViewById(R.id.notes_list);
         notesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mItemsRecyclerAdapter = new ItemsRecyclerAdapter(getFragmentManager());
+        mItemsRecyclerAdapter = new ItemsRecyclerAdapter(getFragmentManager(), this);
         notesRecycler.setAdapter(mItemsRecyclerAdapter);
 
         setTitle(getString(R.string.title_my_notes));
@@ -43,6 +44,7 @@ public class NotesListFragment extends BaseFragment {
         fabAddNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                    hideLandContainer();
                 replaceFragment(ViewPagerFragment.newInstance(), true);
             }
         });
@@ -56,7 +58,8 @@ public class NotesListFragment extends BaseFragment {
 
         DataSource dbSource = new DataSource(getActivity());
         List<Item> items = dbSource.getAllRecords(PrefsManager.getInstance().getCurrentUserID());
-        mItemsRecyclerAdapter.updateList(items);
+
+        mItemsRecyclerAdapter.updateList(items, isLand());
 
         enableLogOutMenuItem(true);
     }

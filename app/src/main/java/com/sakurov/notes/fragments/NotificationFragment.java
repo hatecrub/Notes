@@ -13,8 +13,6 @@ import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Notification;
 
-import java.util.Date;
-
 public class NotificationFragment extends BaseFragment {
 
     private Notification mNotification;
@@ -57,6 +55,7 @@ public class NotificationFragment extends BaseFragment {
             @Override
             public void onClick(View view) {
                 if (mNotification != null) {
+                    hideLandContainer();
                     replaceFragment(EditNotificationFragment.newInstance(mNotification), true);
                 }
             }
@@ -67,7 +66,7 @@ public class NotificationFragment extends BaseFragment {
                 PrefsManager.getInstance().getCurrentUserName()));
         notificationDateCreated.setText(String.format("%s%s", getString(R.string.created), mNotification.getDateCreated()));
         notificationDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNotification.getDateEdited()));
-        notificationTime.setText(String.format("%s%s", getString(R.string.time), new Date(mNotification.getTimeInMillis()).toString()));
+        notificationTime.setText(String.format("%s%s", getString(R.string.time), mNotification.getTime()));
         return rootView;
     }
 
