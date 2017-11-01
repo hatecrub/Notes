@@ -80,6 +80,29 @@ public class DataSource {
                         null);
     }
 
+    public Note getNoteById(long noteId) {
+        Note note = null;
+        Cursor cursor = mContentResolver
+                .query(Entry.NOTES_URI,
+                        null,
+                        Schema.ID + Q,
+                        new String[]{String.valueOf(noteId)},
+                        null);
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                note = new Note(cursor.getInt(cursor.getColumnIndex(Schema.ID)),
+                        cursor.getLong(cursor.getColumnIndex(Schema.USER_ID)),
+                        cursor.getString(cursor.getColumnIndex(Schema.TEXT)),
+                        cursor.getString(cursor.getColumnIndex(Schema.DATE_CREATED)),
+                        cursor.getString(cursor.getColumnIndex(Schema.DATE_EDITED)));
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return note;
+    }
+
     private List<Note> getNotes(long userId) {
         List<Note> notes = new ArrayList<>();
         Cursor cursor = mContentResolver
@@ -118,6 +141,30 @@ public class DataSource {
                         getContentValuesForNote(note),
                         null,
                         null);
+    }
+
+    public Notification getNotificationById(long notificationId) {
+        Notification notification = null;
+        Cursor cursor = mContentResolver
+                .query(Entry.NOTES_URI,
+                        null,
+                        Schema.ID + Q,
+                        new String[]{String.valueOf(notificationId)},
+                        null);
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                notification = new Notification(cursor.getInt(cursor.getColumnIndex(Schema.ID)),
+                        cursor.getLong(cursor.getColumnIndex(Schema.USER_ID)),
+                        cursor.getString(cursor.getColumnIndex(Schema.TEXT)),
+                        cursor.getString(cursor.getColumnIndex(Schema.DATE_CREATED)),
+                        cursor.getString(cursor.getColumnIndex(Schema.DATE_EDITED)),
+                        cursor.getLong(cursor.getColumnIndex(Schema.TIME_NOTIFICATION)));
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return notification;
     }
 
     private List<Notification> getNotifications(long userId) {

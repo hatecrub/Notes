@@ -151,6 +151,7 @@ public class EditNotificationFragment extends BaseFragment {
                         addAlarm(mNotification, getActivity().getApplicationContext());
                         getFragmentManager().popBackStack();
                         showLandContainer();
+                        updateLandContainer();
                     }
                 } else
                     showToast(R.string.empty_note);

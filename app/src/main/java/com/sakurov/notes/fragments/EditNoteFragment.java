@@ -93,6 +93,7 @@ public class EditNoteFragment extends BaseFragment {
                         mDataSource.updateNote(mNote);
                         getFragmentManager().popBackStack();
                         showLandContainer();
+                        updateLandContainer();
                     }
                 } else
                     showToast(R.string.empty_note);

@@ -1,6 +1,5 @@
 package com.sakurov.notes.fragments;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sakurov.notes.data.DataSource;
 import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Notification;
@@ -16,6 +16,12 @@ import com.sakurov.notes.entities.Notification;
 public class NotificationFragment extends BaseFragment {
 
     private Notification mNotification;
+
+    private TextView notificationText;
+    private TextView notificationAuthor;
+    private TextView notificationDateCreated;
+    private TextView notificationDateEdited;
+    private TextView notificationTime;
 
     public static NotificationFragment newInstance(Notification notification) {
 
@@ -39,11 +45,11 @@ public class NotificationFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notification, container, false);
 
-        TextView notificationText = rootView.findViewById(R.id.text);
-        TextView notificationAuthor = rootView.findViewById(R.id.author);
-        TextView notificationDateCreated = rootView.findViewById(R.id.created);
-        TextView notificationDateEdited = rootView.findViewById(R.id.edited);
-        TextView notificationTime = rootView.findViewById(R.id.time);
+        notificationText = rootView.findViewById(R.id.text);
+        notificationAuthor = rootView.findViewById(R.id.author);
+        notificationDateCreated = rootView.findViewById(R.id.created);
+        notificationDateEdited = rootView.findViewById(R.id.edited);
+        notificationTime = rootView.findViewById(R.id.time);
 
         FloatingActionButton fabEditNote = rootView.findViewById(R.id.fab_edit);
 
@@ -61,12 +67,9 @@ public class NotificationFragment extends BaseFragment {
             }
         });
 
-        notificationText.setText(mNotification.getText());
-        notificationAuthor.setText(String.format("%s%s", getString(R.string.author),
-                PrefsManager.getInstance().getCurrentUserName()));
-        notificationDateCreated.setText(String.format("%s%s", getString(R.string.created), mNotification.getDateCreated()));
-        notificationDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNotification.getDateEdited()));
-        notificationTime.setText(String.format("%s%s", getString(R.string.time), mNotification.getTime()));
+        update();
+        updateDisplay();
+
         return rootView;
     }
 
@@ -74,5 +77,23 @@ public class NotificationFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         enableLogOutMenuItem(true);
+    }
+
+    @Override
+    protected void update() {
+        DataSource dataSource = new DataSource(getContext());
+        if (mNotification != null)
+            mNotification = dataSource.getNotificationById(mNotification.getId());
+
+        updateDisplay();
+    }
+
+    private void updateDisplay() {
+        notificationText.setText(mNotification.getText());
+        notificationAuthor.setText(String.format("%s%s", getString(R.string.author),
+                PrefsManager.getInstance().getCurrentUserName()));
+        notificationDateCreated.setText(String.format("%s%s", getString(R.string.created), mNotification.getDateCreated()));
+        notificationDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNotification.getDateEdited()));
+        notificationTime.setText(String.format("%s%s", getString(R.string.time), mNotification.getTime()));
     }
 }

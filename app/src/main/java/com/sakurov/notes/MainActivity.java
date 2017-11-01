@@ -1,5 +1,7 @@
 package com.sakurov.notes;
 
+import android.animation.LayoutTransition;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -7,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -18,7 +21,7 @@ import com.sakurov.notes.utils.PrefsManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String ORIENTATION_CHANGED = "orientation_changed";
+    private static final String IS_LAND = "isLand";
 
     PrefsManager mPrefsManager;
 
@@ -28,6 +31,37 @@ public class MainActivity extends AppCompatActivity {
     private boolean isLandContainerShown = false;
 
     View detailsFrame;
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        boolean oldIsLand;
+        if (savedInstanceState != null) {
+            oldIsLand = savedInstanceState.getBoolean(IS_LAND);
+            if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                if (oldIsLand && !isLand) {
+                    Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container_land);
+                    if (fragment != null) {
+                        getSupportFragmentManager().popBackStack();
+                        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                        getSupportFragmentManager().executePendingTransactions();
+                        replaceFragment(fragment, R.id.container);
+                    }
+                } else if (!oldIsLand && isLand) {
+                    if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
+                        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+                        if (fragment != null) {
+                            getSupportFragmentManager().popBackStack();
+                            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                            getSupportFragmentManager().executePendingTransactions();
+                            showContainerLand();
+                            replaceFragment(fragment, R.id.container_land);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
         isLand = detailsFrame != null;
 
         if (savedInstanceState == null) {
+
+            ((ViewGroup) findViewById(R.id.root)).getLayoutTransition()
+                    .enableTransitionType(LayoutTransition.CHANGING);
 
             if (mPrefsManager.isUserRemembered()) {
                 User user = mPrefsManager.getCurrentUser();
@@ -110,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putBoolean(ORIENTATION_CHANGED, true);
+        outState.putBoolean(IS_LAND, isLand);
     }
 
     public void setActionBarTitle(String title) {
@@ -140,5 +177,12 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isLand() {
         return isLand;
+    }
+
+    void replaceFragment(Fragment fragment, int container) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(container, fragment)
+                .addToBackStack(fragment.getClass().getSimpleName())
+                .commit();
     }
 }

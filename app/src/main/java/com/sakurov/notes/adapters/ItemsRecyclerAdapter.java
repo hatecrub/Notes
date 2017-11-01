@@ -78,6 +78,8 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 NoteFragment.newInstance((Note) mItems.get(position)) :
                 NotificationFragment.newInstance((Notification) mItems.get(position));
 
+        mFragmentManager.popBackStack();
+
         mFragmentManager.beginTransaction()
                 .replace(container, fragment)
                 .addToBackStack(fragment.getClass().getSimpleName())

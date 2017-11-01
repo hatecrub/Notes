@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -21,7 +22,7 @@ abstract class BaseFragment extends Fragment {
     private String FRAGMENT_TITLE;
     private MainActivity mainActivity;
 
-    void replaceFragment(Fragment fragment, boolean addToBackStack) {
+    void replaceFragment(BaseFragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
         if (addToBackStack)
@@ -29,7 +30,7 @@ abstract class BaseFragment extends Fragment {
         transaction.commit();
     }
 
-    public void addAsRootFragment(Fragment fragment) {
+    public void addAsRootFragment(BaseFragment fragment) {
         getFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         replaceFragment(fragment, false);
     }
@@ -81,5 +82,16 @@ abstract class BaseFragment extends Fragment {
 
     public boolean isLand() {
         return mainActivity.isLand();
+    }
+
+    protected void update() {
+    }
+
+    protected void updateLandContainer() {
+        if (isLand()) {
+            BaseFragment fragment = (BaseFragment) getFragmentManager().findFragmentById(R.id.container_land);
+            if (fragment != null)
+                fragment.update();
+        }
     }
 }

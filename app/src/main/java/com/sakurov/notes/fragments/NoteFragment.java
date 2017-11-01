@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.sakurov.notes.data.DataSource;
 import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
@@ -16,6 +17,11 @@ import com.sakurov.notes.entities.Note;
 public class NoteFragment extends BaseFragment {
 
     private Note mNote;
+
+    private TextView noteText;
+    private TextView noteAuthor;
+    private TextView noteDateCreated;
+    private TextView noteDateEdited;
 
     public static NoteFragment newInstance(Note note) {
         Bundle bundle = new Bundle();
@@ -38,10 +44,10 @@ public class NoteFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_note, container, false);
 
-        TextView noteText = rootView.findViewById(R.id.text);
-        TextView noteAuthor = rootView.findViewById(R.id.author);
-        TextView noteDateCreated = rootView.findViewById(R.id.created);
-        TextView noteDateEdited = rootView.findViewById(R.id.edited);
+        noteText = rootView.findViewById(R.id.text);
+        noteAuthor = rootView.findViewById(R.id.author);
+        noteDateCreated = rootView.findViewById(R.id.created);
+        noteDateEdited = rootView.findViewById(R.id.edited);
         FloatingActionButton fabEditNote = rootView.findViewById(R.id.fab_edit);
 
         readBundle(getArguments());
@@ -58,11 +64,8 @@ public class NoteFragment extends BaseFragment {
             }
         });
 
-        noteText.setText(mNote.getText());
-        noteAuthor.setText(String.format("%s%s", getString(R.string.author),
-                PrefsManager.getInstance().getCurrentUserName()));
-        noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
-        noteDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNote.getDateEdited()));
+        updateDisplay();
+
         return rootView;
     }
 
@@ -70,5 +73,22 @@ public class NoteFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         enableLogOutMenuItem(true);
+    }
+
+    @Override
+    protected void update() {
+        DataSource dataSource = new DataSource(getContext());
+        if (mNote != null)
+            mNote = dataSource.getNoteById(mNote.getId());
+
+        updateDisplay();
+    }
+
+    private void updateDisplay() {
+        noteText.setText(mNote.getText());
+        noteAuthor.setText(String.format("%s%s", getString(R.string.author),
+                PrefsManager.getInstance().getCurrentUserName()));
+        noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
+        noteDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNote.getDateEdited()));
     }
 }
