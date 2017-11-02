@@ -1,7 +1,6 @@
 package com.sakurov.notes.adapters;
 
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +11,8 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Item;
 import com.sakurov.notes.entities.Note;
-import com.sakurov.notes.entities.Notification;
 import com.sakurov.notes.fragments.NoteFragment;
 import com.sakurov.notes.fragments.NotesListFragment;
-import com.sakurov.notes.fragments.NotificationFragment;
 import com.sakurov.notes.utils.Utils;
 
 import java.util.List;
@@ -77,15 +74,12 @@ public class NotesAdapterDelegate extends AdapterDelegate<List<Item>> {
 
             int container = mFragment.isLand() ? R.id.container_land : R.id.container;
 
-            Fragment fragment = (items.get(getAdapterPosition()).getItemType() == Item.NOTE) ?
-                    NoteFragment.newInstance((Note) items.get(getAdapterPosition())) :
-                    NotificationFragment.newInstance((Notification) items.get(getAdapterPosition()));
-
             mFragment.getFragmentManager().popBackStack();
 
             mFragment.getFragmentManager().beginTransaction()
-                    .replace(container, fragment)
-                    .addToBackStack(fragment.getClass().getSimpleName())
+                    .replace(container,
+                            NoteFragment.newInstance((Note) items.get(getAdapterPosition())))
+                    .addToBackStack(NoteFragment.class.getSimpleName())
                     .commit();
         }
     }
