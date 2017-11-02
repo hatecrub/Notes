@@ -93,8 +93,8 @@ public class DataSource {
                 note = new Note(cursor.getInt(cursor.getColumnIndex(Schema.ID)),
                         cursor.getLong(cursor.getColumnIndex(Schema.USER_ID)),
                         cursor.getString(cursor.getColumnIndex(Schema.TEXT)),
-                        cursor.getString(cursor.getColumnIndex(Schema.DATE_CREATED)),
-                        cursor.getString(cursor.getColumnIndex(Schema.DATE_EDITED)));
+                        cursor.getLong(cursor.getColumnIndex(Schema.DATE_CREATED)),
+                        cursor.getLong(cursor.getColumnIndex(Schema.DATE_EDITED)));
             }
         } finally {
             if (cursor != null)
@@ -117,8 +117,8 @@ public class DataSource {
                     notes.add(new Note(cursor.getInt(cursor.getColumnIndex(Schema.ID)),
                             cursor.getLong(cursor.getColumnIndex(Schema.USER_ID)),
                             cursor.getString(cursor.getColumnIndex(Schema.TEXT)),
-                            cursor.getString(cursor.getColumnIndex(Schema.DATE_CREATED)),
-                            cursor.getString(cursor.getColumnIndex(Schema.DATE_EDITED))));
+                            cursor.getLong(cursor.getColumnIndex(Schema.DATE_CREATED)),
+                            cursor.getLong(cursor.getColumnIndex(Schema.DATE_EDITED))));
                 } while (cursor.moveToNext());
             }
         } finally {
@@ -156,8 +156,8 @@ public class DataSource {
                 notification = new Notification(cursor.getInt(cursor.getColumnIndex(Schema.ID)),
                         cursor.getLong(cursor.getColumnIndex(Schema.USER_ID)),
                         cursor.getString(cursor.getColumnIndex(Schema.TEXT)),
-                        cursor.getString(cursor.getColumnIndex(Schema.DATE_CREATED)),
-                        cursor.getString(cursor.getColumnIndex(Schema.DATE_EDITED)),
+                        cursor.getLong(cursor.getColumnIndex(Schema.DATE_CREATED)),
+                        cursor.getLong(cursor.getColumnIndex(Schema.DATE_EDITED)),
                         cursor.getLong(cursor.getColumnIndex(Schema.TIME_NOTIFICATION)));
             }
         } finally {
@@ -181,8 +181,8 @@ public class DataSource {
                     notifications.add(new Notification(cursor.getInt(cursor.getColumnIndex(Schema.ID)),
                             cursor.getLong(cursor.getColumnIndex(Schema.USER_ID)),
                             cursor.getString(cursor.getColumnIndex(Schema.TEXT)),
-                            cursor.getString(cursor.getColumnIndex(Schema.DATE_CREATED)),
-                            cursor.getString(cursor.getColumnIndex(Schema.DATE_EDITED)),
+                            cursor.getLong(cursor.getColumnIndex(Schema.DATE_CREATED)),
+                            cursor.getLong(cursor.getColumnIndex(Schema.DATE_EDITED)),
                             cursor.getLong(cursor.getColumnIndex(Schema.TIME_NOTIFICATION))));
                 } while (cursor.moveToNext());
             }

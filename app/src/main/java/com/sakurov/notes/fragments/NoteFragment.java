@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.sakurov.notes.R;
 import com.sakurov.notes.data.DataSource;
 import com.sakurov.notes.entities.Note;
+import com.sakurov.notes.entities.Utils;
 import com.sakurov.notes.utils.PrefsManager;
 
 import butterknife.BindView;
@@ -75,10 +76,12 @@ public class NoteFragment extends BaseFragment {
 
     private void updateDisplay() {
         noteText.setText(mNote.getText());
-        noteAuthor.setText(String.format("%s%s", getString(R.string.author),
-                PrefsManager.getInstance().getCurrentUserName()));
-        noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
-        noteDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNote.getDateEdited()));
+        noteAuthor.setText(
+                String.format("%s%s", getString(R.string.author), PrefsManager.getInstance().getCurrentUserName()));
+        noteDateCreated.setText(
+                String.format("%s%s", getString(R.string.created), Utils.getDate(mNote.getDateCreated())));
+        noteDateEdited.setText(
+                String.format("%s%s", getString(R.string.edited), Utils.getDate(mNote.getDateEdited())));
     }
 
     @OnClick(R.id.fab_edit)

@@ -9,47 +9,46 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="88dp"
-        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:padding="8dp"
+            android:layout_margin="@dimen/margin"
+            android:layout_weight="20"
             android:textColor="@color/primary_text"
-            android:textSize="20sp" />
+            android:textSize="@dimen/primary_size" />
 
         <TextView
             android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginRight="@dimen/margin"
             android:layout_weight="1"
-            android:paddingRight="8dp"
             android:textColor="@color/secondary_text"
-            android:textSize="12sp" />
+            android:textSize="@dimen/secondary_size" />
 
         <TextView
             android:id="@+id/created"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginRight="@dimen/margin"
             android:layout_weight="1"
-            android:paddingRight="8dp"
             android:textColor="@color/secondary_text"
-            android:textSize="12sp" />
+            android:textSize="@dimen/secondary_size" />
 
         <TextView
             android:id="@+id/edited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
+            android:layout_marginRight="@dimen/margin"
             android:layout_weight="1"
-            android:paddingRight="8dp"
             android:textColor="@color/secondary_text"
-            android:textSize="12sp" />
+            android:textSize="@dimen/secondary_size" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -58,8 +57,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_marginRight="@dimen/margin"
         android:src="@drawable/ic_edit_white_48dp"
         app:fabSize="normal" />
 

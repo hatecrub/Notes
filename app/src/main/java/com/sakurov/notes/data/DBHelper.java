@@ -24,15 +24,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 + Schema.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + Schema.USER_ID + " INTEGER,"
                 + Schema.TEXT + " TEXT,"
-                + Schema.DATE_CREATED + " TEXT,"
-                + Schema.DATE_EDITED + " TEXT);");
+                + Schema.DATE_CREATED + " INTEGER,"
+                + Schema.DATE_EDITED + " INTEGER);");
 
         sqLiteDatabase.execSQL("CREATE TABLE " + Schema.NOTIFICATIONS + " ("
                 + Schema.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + Schema.USER_ID + " INTEGER,"
                 + Schema.TEXT + " TEXT,"
-                + Schema.DATE_CREATED + " TEXT,"
-                + Schema.DATE_EDITED + " TEXT,"
+                + Schema.DATE_CREATED + " INTEGER,"
+                + Schema.DATE_EDITED + " INTEGER,"
                 + Schema.TIME_NOTIFICATION + " INTEGER);");
     }
 

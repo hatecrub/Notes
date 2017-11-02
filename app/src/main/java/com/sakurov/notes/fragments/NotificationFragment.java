@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.sakurov.notes.R;
 import com.sakurov.notes.data.DataSource;
 import com.sakurov.notes.entities.Notification;
+import com.sakurov.notes.entities.Utils;
 import com.sakurov.notes.utils.PrefsManager;
 
 import butterknife.BindView;
@@ -77,11 +78,11 @@ public class NotificationFragment extends BaseFragment {
         notificationAuthor.setText(
                 String.format("%s%s", getString(R.string.author), PrefsManager.getInstance().getCurrentUserName()));
         notificationDateCreated.setText(
-                String.format("%s%s", getString(R.string.created), mNotification.getDateCreated()));
+                String.format("%s%s", getString(R.string.created), Utils.getDate(mNotification.getDateCreated())));
         notificationDateEdited.setText(
-                String.format("%s%s", getString(R.string.edited), mNotification.getDateEdited()));
+                String.format("%s%s", getString(R.string.edited), Utils.getDate(mNotification.getDateEdited())));
         notificationTime.setText(
-                String.format("%s%s", getString(R.string.time), mNotification.getTime()));
+                String.format("%s%s", getString(R.string.time), Utils.getDate(mNotification.getTimeInMillis())));
     }
 
     @OnClick(R.id.fab_edit)

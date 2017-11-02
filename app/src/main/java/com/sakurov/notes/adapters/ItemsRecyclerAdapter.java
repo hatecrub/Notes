@@ -14,6 +14,7 @@ import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Item;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.Notification;
+import com.sakurov.notes.entities.Utils;
 import com.sakurov.notes.fragments.NoteFragment;
 import com.sakurov.notes.fragments.NotesListFragment;
 import com.sakurov.notes.fragments.NotificationFragment;
@@ -107,7 +108,7 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
         public void bind(Item item) {
             Note note = (Note) item;
             noteText.setText(note.getText());
-            noteDateCreated.setText(note.getDateCreated());
+            noteDateCreated.setText(Utils.getDate(note.getDateCreated()));
         }
 
         @OnClick(R.id.root)
@@ -136,8 +137,8 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
         public void bind(Item item) {
             Notification notification = (Notification) item;
             notificationText.setText(notification.getText());
-            notificationDateCreated.setText(notification.getDateCreated());
-            notificationTime.setText(notification.getTime());
+            notificationDateCreated.setText(Utils.getDate(notification.getDateCreated()));
+            notificationTime.setText(Utils.getDate(notification.getTimeInMillis()));
             if (this.getItemViewType() == Item.NOTIFICATION_OUTDATED) {
                 notificationTime.
                         setPaintFlags(notificationTime.getPaintFlags() |

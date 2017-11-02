@@ -3,8 +3,6 @@ package com.sakurov.notes.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
-
 public class Notification extends Note implements Parcelable, Item {
 
     private long timeInMillis;
@@ -14,7 +12,7 @@ public class Notification extends Note implements Parcelable, Item {
         this.timeInMillis = timeInMillis;
     }
 
-    public Notification(long id, long userId, String text, String dateCreated, String dateEdited, long timeInMillis) {
+    public Notification(long id, long userId, String text, long dateCreated, long dateEdited, long timeInMillis) {
         super(id, userId, text, dateCreated, dateEdited);
         this.timeInMillis = timeInMillis;
     }
@@ -25,10 +23,6 @@ public class Notification extends Note implements Parcelable, Item {
 
     public void setTimeInMillis(long timeInMillis) {
         this.timeInMillis = timeInMillis;
-    }
-
-    public String getTime() {
-        return SIMPLE_DATE.format(new Date(getTimeInMillis()));
     }
 
 //--------------------------------Parcelable implementation-----------------------------------------

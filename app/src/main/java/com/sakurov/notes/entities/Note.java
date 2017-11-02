@@ -1,25 +1,17 @@
 package com.sakurov.notes.entities;
 
-import android.annotation.SuppressLint;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class Note implements Parcelable, Item {
-
-    @SuppressLint("SimpleDateFormat")
-    final static SimpleDateFormat SIMPLE_DATE =
-            new SimpleDateFormat("dd.MM.yyyy HH.mm");
 
     private long id;
     private final long userId;
     private String text;
-    private final String dateCreated;
-    private String dateEdited;
+    private final long dateCreated;
+    private long dateEdited;
 
-    public Note(long id, long userId, String text, String dateCreated, String dateEdited) {
+    public Note(long id, long userId, String text, long dateCreated, long dateEdited) {
         this.id = id;
         this.userId = userId;
         this.text = text;
@@ -30,7 +22,7 @@ public class Note implements Parcelable, Item {
     public Note(long userId, String text) {
         this.userId = userId;
         this.text = text;
-        this.dateCreated = SIMPLE_DATE.format(new Date());
+        this.dateCreated = System.currentTimeMillis();
         this.dateEdited = this.dateCreated;
     }
 
@@ -44,7 +36,7 @@ public class Note implements Parcelable, Item {
 
     public void setText(String text) {
         this.text = text;
-        this.dateEdited = SIMPLE_DATE.format(new Date());
+        this.dateEdited = System.currentTimeMillis();
     }
 
     public String getText() {
@@ -55,11 +47,11 @@ public class Note implements Parcelable, Item {
         return userId;
     }
 
-    public String getDateCreated() {
+    public long getDateCreated() {
         return dateCreated;
     }
 
-    public String getDateEdited() {
+    public long getDateEdited() {
         return dateEdited;
     }
 
@@ -69,8 +61,8 @@ public class Note implements Parcelable, Item {
         id = in.readLong();
         userId = in.readLong();
         text = in.readString();
-        dateCreated = in.readString();
-        dateEdited = in.readString();
+        dateCreated = in.readLong();
+        dateEdited = in.readLong();
     }
 
     @Override
@@ -83,8 +75,8 @@ public class Note implements Parcelable, Item {
         dest.writeLong(id);
         dest.writeLong(userId);
         dest.writeString(text);
-        dest.writeString(dateCreated);
-        dest.writeString(dateEdited);
+        dest.writeLong(dateCreated);
+        dest.writeLong(dateEdited);
     }
 
     @SuppressWarnings("unused")
