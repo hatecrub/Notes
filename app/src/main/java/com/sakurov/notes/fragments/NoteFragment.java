@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.sakurov.notes.R;
 import com.sakurov.notes.data.DataSource;
 import com.sakurov.notes.entities.Note;
-import com.sakurov.notes.entities.Utils;
+import com.sakurov.notes.utils.Utils;
 import com.sakurov.notes.utils.PrefsManager;
 
 import butterknife.BindView;

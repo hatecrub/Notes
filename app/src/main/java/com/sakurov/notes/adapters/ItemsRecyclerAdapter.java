@@ -14,7 +14,7 @@ import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Item;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.entities.Notification;
-import com.sakurov.notes.entities.Utils;
+import com.sakurov.notes.utils.Utils;
 import com.sakurov.notes.fragments.NoteFragment;
 import com.sakurov.notes.fragments.NotesListFragment;
 import com.sakurov.notes.fragments.NotificationFragment;

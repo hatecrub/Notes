@@ -2,7 +2,6 @@ package com.sakurov.notes.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,12 @@ import android.widget.TextView;
 import com.sakurov.notes.R;
 import com.sakurov.notes.data.DataSource;
 import com.sakurov.notes.entities.Notification;
-import com.sakurov.notes.entities.Utils;
+import com.sakurov.notes.utils.Utils;
 import com.sakurov.notes.utils.PrefsManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 public class NotificationFragment extends BaseFragment {
 
