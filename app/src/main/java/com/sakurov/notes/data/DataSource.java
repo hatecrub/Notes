@@ -13,6 +13,8 @@ import com.sakurov.notes.entities.Notification;
 import com.sakurov.notes.entities.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.sakurov.notes.data.NotesContract.Entry;
@@ -210,6 +212,29 @@ public class DataSource {
         List<Item> items = new ArrayList<>();
         items.addAll(getNotes(userId));
         items.addAll(getNotifications(userId));
+        Collections.sort(items, new Comparator<Item>() {
+            @Override
+            public int compare(Item o1, Item o2) {
+                switch (o1.getItemType()) {
+                    case Item.NOTIFICATION: {
+                        if (o2.getItemType() == Item.NOTIFICATION) {
+                            Notification n1 = (Notification) o1, n2 = (Notification) o2;
+                            return n1.getTimeInMillis() > n2.getTimeInMillis() ? -1 :
+                                    n1.getTimeInMillis() == n2.getTimeInMillis() ? 0 : 1;
+                        } else return -1;
+                    }
+                    default: {
+                        if (o2.getItemType() == Item.NOTIFICATION) {
+                            return 1;
+                        } else {
+                            Note n1 = (Note) o1, n2 = (Note) o2;
+                            return n1.getDateEdited() > n2.getDateEdited() ? -1 :
+                                    n1.getDateEdited() == n2.getDateEdited() ? 0 : 1;
+                        }
+                    }
+                }
+            }
+        });
         return items;
     }
 
