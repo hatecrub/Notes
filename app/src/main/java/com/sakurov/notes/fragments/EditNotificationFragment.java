@@ -10,40 +10,43 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.sakurov.notes.NotificationReceiver;
-import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
-import com.sakurov.notes.entities.Notification;
 import com.sakurov.notes.data.DataSource;
+import com.sakurov.notes.entities.Notification;
+import com.sakurov.notes.utils.PrefsManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class EditNotificationFragment extends BaseFragment {
 
     private final static String TIME = "time";
 
-    private EditText mEditNotification;
-    private Notification mNotification;
-    private DataSource mSource;
-    private FloatingActionButton mFabDone;
-
     static final int DATE_DIALOG_ID = 1;
     static final int TIME_DIALOG_ID = 2;
-    private TextView mDateAndTimeDisplay;
 
+    @BindView(R.id.text)
+    TextInputEditText mEditNotification;
+    @BindView(R.id.in_layout)
+    TextInputLayout inLayout;
+    @BindView(R.id.date_and_time)
+    TextView mDateAndTimeDisplay;
+
+    private Notification mNotification;
     private Calendar mCalendar = Calendar.getInstance();
 
     public static EditNotificationFragment newInstance() {
@@ -76,14 +79,7 @@ public class EditNotificationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_notification, container, false);
-        TextInputLayout textIn = rootView.findViewById(R.id.in_layout);
-
-        mEditNotification = rootView.findViewById(R.id.text);
-        mFabDone = rootView.findViewById(R.id.fab_done);
-
-        mDateAndTimeDisplay = rootView.findViewById(R.id.date_and_time);
-        Button pickDate = rootView.findViewById(R.id.pick_date);
-        Button pickTime = rootView.findViewById(R.id.pick_time);
+        unbinder = ButterKnife.bind(this, rootView);
 
         readBundle(getArguments());
 
@@ -105,58 +101,9 @@ public class EditNotificationFragment extends BaseFragment {
             }
         }
 
-        textIn.setHint(FRAGMENT_TITLE);
-
-        pickDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCreateDialog(DATE_DIALOG_ID).show();
-            }
-        });
-
-        pickTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCreateDialog(TIME_DIALOG_ID).show();
-            }
-        });
+        inLayout.setHint(FRAGMENT_TITLE);
 
         return rootView;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mSource = new DataSource(getActivity());
-
-        mFabDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isInputValid()) {
-                    long time = mCalendar.getTimeInMillis();
-
-                    if (mNotification == null) {
-                        mNotification = new Notification(PrefsManager.getInstance().getCurrentUserID(),
-                                mEditNotification.getText().toString(), time);
-                        mNotification.setId(mSource.addNotification(mNotification));
-                        addAlarm(mNotification, getParentFragment().getActivity().getApplicationContext());
-                        getParentFragment().getFragmentManager().popBackStack();
-                        if (getParentFragment().getFragmentManager().getBackStackEntryCount() > 1) {
-                            showLandContainer();
-                        }
-                    } else {
-                        mNotification.setText(mEditNotification.getText().toString());
-                        mNotification.setTimeInMillis(time);
-                        mSource.updateNotification(mNotification);
-                        addAlarm(mNotification, getActivity().getApplicationContext());
-                        getFragmentManager().popBackStack();
-                        showLandContainer();
-                        updateLandContainer();
-                    }
-                } else
-                    showToast(R.string.empty_note);
-            }
-        });
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -164,6 +111,24 @@ public class EditNotificationFragment extends BaseFragment {
         mDateAndTimeDisplay.setText(
                 new SimpleDateFormat("dd.MM.yyyy HH:mm")
                         .format(mCalendar.getTime()));
+    }
+
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DATE_DIALOG_ID:
+                return new DatePickerDialog(getContext(),
+                        dateListener,
+                        mCalendar.get(Calendar.YEAR),
+                        mCalendar.get(Calendar.MONTH),
+                        mCalendar.get(Calendar.DAY_OF_MONTH));
+            case TIME_DIALOG_ID:
+                return new TimePickerDialog(getContext(),
+                        timeListener,
+                        mCalendar.get(Calendar.HOUR_OF_DAY),
+                        mCalendar.get(Calendar.MINUTE),
+                        true);
+        }
+        return null;
     }
 
     private DatePickerDialog.OnDateSetListener dateListener =
@@ -188,30 +153,6 @@ public class EditNotificationFragment extends BaseFragment {
                 }
             };
 
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_DIALOG_ID:
-                return new DatePickerDialog(getContext(),
-                        dateListener,
-                        mCalendar.get(Calendar.YEAR),
-                        mCalendar.get(Calendar.MONTH),
-                        mCalendar.get(Calendar.DAY_OF_MONTH));
-            case TIME_DIALOG_ID:
-                return new TimePickerDialog(getContext(),
-                        timeListener,
-                        mCalendar.get(Calendar.HOUR_OF_DAY),
-                        mCalendar.get(Calendar.MINUTE),
-                        true);
-        }
-        return null;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putLong(TIME, mCalendar.getTimeInMillis());
-    }
-
     private boolean isInputValid() {
         return !mEditNotification.getText().toString().isEmpty()
                 && !(mCalendar.getTimeInMillis() < System.currentTimeMillis());
@@ -231,6 +172,49 @@ public class EditNotificationFragment extends BaseFragment {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (alarmManager != null) {
             alarmManager.set(AlarmManager.RTC_WAKEUP, notification.getTimeInMillis(), pendingIntent);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(TIME, mCalendar.getTimeInMillis());
+    }
+
+    @OnClick({R.id.pick_date, R.id.pick_time, R.id.fab_done})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.pick_date:
+                onCreateDialog(DATE_DIALOG_ID).show();
+                break;
+            case R.id.pick_time:
+                onCreateDialog(TIME_DIALOG_ID).show();
+                break;
+            case R.id.fab_done:
+                if (isInputValid()) {
+                    DataSource dataSource = new DataSource(getContext());
+                    long time = mCalendar.getTimeInMillis();
+                    if (mNotification == null) {
+                        mNotification = new Notification(PrefsManager.getInstance().getCurrentUserID(),
+                                mEditNotification.getText().toString(), time);
+                        mNotification.setId(dataSource.addNotification(mNotification));
+                        addAlarm(mNotification, getParentFragment().getActivity().getApplicationContext());
+                        getParentFragment().getFragmentManager().popBackStack();
+                        if (getParentFragment().getFragmentManager().getBackStackEntryCount() > 1) {
+                            showLandContainer();
+                        }
+                    } else {
+                        mNotification.setText(mEditNotification.getText().toString());
+                        mNotification.setTimeInMillis(time);
+                        dataSource.updateNotification(mNotification);
+                        addAlarm(mNotification, getActivity().getApplicationContext());
+                        getFragmentManager().popBackStack();
+                        showLandContainer();
+                        updateLandContainer();
+                    }
+                } else
+                    showToast(R.string.empty_note);
+                break;
         }
     }
 }

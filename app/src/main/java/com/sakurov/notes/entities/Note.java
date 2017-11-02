@@ -9,10 +9,8 @@ import java.util.Date;
 
 public class Note implements Parcelable, Item {
 
-    private final static String NO_TIME = "";
-
     @SuppressLint("SimpleDateFormat")
-    protected final static SimpleDateFormat SIMPLE_DATE =
+    final static SimpleDateFormat SIMPLE_DATE =
             new SimpleDateFormat("dd.MM.yyyy HH.mm");
 
     private long id;

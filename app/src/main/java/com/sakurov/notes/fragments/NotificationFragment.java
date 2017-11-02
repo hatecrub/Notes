@@ -8,29 +8,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sakurov.notes.data.DataSource;
-import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
+import com.sakurov.notes.data.DataSource;
 import com.sakurov.notes.entities.Notification;
+import com.sakurov.notes.utils.PrefsManager;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class NotificationFragment extends BaseFragment {
 
+    @BindView(R.id.text)
+    TextView notificationText;
+    @BindView(R.id.author)
+    TextView notificationAuthor;
+    @BindView(R.id.created)
+    TextView notificationDateCreated;
+    @BindView(R.id.edited)
+    TextView notificationDateEdited;
+    @BindView(R.id.time)
+    TextView notificationTime;
     private Notification mNotification;
 
-    private TextView notificationText;
-    private TextView notificationAuthor;
-    private TextView notificationDateCreated;
-    private TextView notificationDateEdited;
-    private TextView notificationTime;
-
     public static NotificationFragment newInstance(Notification notification) {
-
         Bundle bundle = new Bundle();
         bundle.putParcelable(NOTIFICATION, notification);
-
         NotificationFragment fragment = new NotificationFragment();
         fragment.setArguments(bundle);
-
         return fragment;
     }
 
@@ -44,32 +50,10 @@ public class NotificationFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_notification, container, false);
-
-        notificationText = rootView.findViewById(R.id.text);
-        notificationAuthor = rootView.findViewById(R.id.author);
-        notificationDateCreated = rootView.findViewById(R.id.created);
-        notificationDateEdited = rootView.findViewById(R.id.edited);
-        notificationTime = rootView.findViewById(R.id.time);
-
-        FloatingActionButton fabEditNote = rootView.findViewById(R.id.fab_edit);
-
+        unbinder = ButterKnife.bind(this, rootView);
         readBundle(getArguments());
-
         setTitle(getString(R.string.title_notification));
-
-        fabEditNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mNotification != null) {
-                    hideLandContainer();
-                    replaceFragment(EditNotificationFragment.newInstance(mNotification), true);
-                }
-            }
-        });
-
-        update();
         updateDisplay();
-
         return rootView;
     }
 
@@ -90,10 +74,21 @@ public class NotificationFragment extends BaseFragment {
 
     private void updateDisplay() {
         notificationText.setText(mNotification.getText());
-        notificationAuthor.setText(String.format("%s%s", getString(R.string.author),
-                PrefsManager.getInstance().getCurrentUserName()));
-        notificationDateCreated.setText(String.format("%s%s", getString(R.string.created), mNotification.getDateCreated()));
-        notificationDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNotification.getDateEdited()));
-        notificationTime.setText(String.format("%s%s", getString(R.string.time), mNotification.getTime()));
+        notificationAuthor.setText(
+                String.format("%s%s", getString(R.string.author), PrefsManager.getInstance().getCurrentUserName()));
+        notificationDateCreated.setText(
+                String.format("%s%s", getString(R.string.created), mNotification.getDateCreated()));
+        notificationDateEdited.setText(
+                String.format("%s%s", getString(R.string.edited), mNotification.getDateEdited()));
+        notificationTime.setText(
+                String.format("%s%s", getString(R.string.time), mNotification.getTime()));
+    }
+
+    @OnClick(R.id.fab_edit)
+    public void onViewClicked() {
+        if (mNotification != null) {
+            hideLandContainer();
+            replaceFragment(EditNotificationFragment.newInstance(mNotification), true);
+        }
     }
 }

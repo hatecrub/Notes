@@ -14,6 +14,10 @@ import com.sakurov.notes.R;
 import com.sakurov.notes.entities.User;
 import com.sakurov.notes.data.DataSource;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class AuthFragment extends BaseFragment {
 
     final static int IN = 100;
@@ -21,12 +25,14 @@ public class AuthFragment extends BaseFragment {
 
     private final static String ACTION = "action";
 
-    private DataSource mSource;
-    private EditText mUserName, mUserPassword;
-    private Button mActionButton;
-    private CheckBox mRememberCheck;
-
-    private int mAction;
+    @BindView(R.id.name)
+    EditText mUserName;
+    @BindView(R.id.password)
+    EditText mUserPassword;
+    @BindView(R.id.action)
+    Button mActionButton;
+    @BindView(R.id.remember)
+    CheckBox mRememberCheck;
 
     public static AuthFragment newInstance(int action) {
 
@@ -39,67 +45,24 @@ public class AuthFragment extends BaseFragment {
         return fragment;
     }
 
-    private void readBundle(Bundle bundle) {
-        if (bundle != null) {
-            mAction = bundle.getInt(ACTION);
-        }
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         setTitle(getString(R.string.title_auth));
         super.onActivityCreated(savedInstanceState);
-        mSource = new DataSource(getActivity());
-
-        mActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isInputValid()) {
-                    User user = new User(mUserName.getText().toString(),
-                            mUserPassword.getText().toString());
-                    switch (mAction) {
-                        case IN: {
-                            if (mSource.checkUserPass(user)) {
-                                user.setId(mSource.getUserId(user));
-                                setUserAndReplace(user);
-                            } else {
-                                showToast(R.string.user_dont_exist);
-                            }
-                            break;
-                        }
-                        case UP: {
-                            if (!mSource.isUserExist(user)) {
-                                user.setId(mSource.addUser(user));
-                                setUserAndReplace(user);
-                            } else {
-                                showToast(R.string.user_exist);
-                            }
-                            break;
-                        }
-                    }
-                } else {
-                    showToast(R.string.field_empty);
-                }
-            }
-        });
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_auth, container, false);
-        mUserName = rootView.findViewById(R.id.name);
-        mUserPassword = rootView.findViewById(R.id.password);
-        mRememberCheck = rootView.findViewById(R.id.remember);
-        mActionButton = rootView.findViewById(R.id.action);
 
-        readBundle(getArguments());
+        unbinder = ButterKnife.bind(this, rootView);
 
         if (savedInstanceState == null) {
             showSoftKeyboard(mUserName);
         }
 
-        switch (mAction) {
+        switch (getArguments().getInt(ACTION)) {
             case IN: {
                 mActionButton.setText(getString(R.string.sign_in));
                 break;
@@ -120,5 +83,36 @@ public class AuthFragment extends BaseFragment {
     private void setUserAndReplace(User user) {
         PrefsManager.getInstance().setCurrentUser(user, mRememberCheck.isChecked());
         addAsRootFragment(NotesListFragment.newInstance());
+    }
+
+    @OnClick(R.id.action)
+    void onActionClick() {
+        if (isInputValid()) {
+            DataSource dataSource = new DataSource(getContext());
+            User user = new User(mUserName.getText().toString(),
+                    mUserPassword.getText().toString());
+            switch (getArguments().getInt(ACTION)) {
+                case IN: {
+                    if (dataSource.checkUserPass(user)) {
+                        user.setId(dataSource.getUserId(user));
+                        setUserAndReplace(user);
+                    } else {
+                        showToast(R.string.user_do_not_exist);
+                    }
+                    break;
+                }
+                case UP: {
+                    if (!dataSource.isUserExist(user)) {
+                        user.setId(dataSource.addUser(user));
+                        setUserAndReplace(user);
+                    } else {
+                        showToast(R.string.user_exist);
+                    }
+                    break;
+                }
+            }
+        } else {
+            showToast(R.string.field_empty);
+        }
     }
 }

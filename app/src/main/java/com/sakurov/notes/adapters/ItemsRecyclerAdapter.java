@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sakurov.notes.R;
@@ -22,6 +21,10 @@ import com.sakurov.notes.fragments.NotificationFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private List<Item> mItems = new ArrayList<>();
@@ -29,14 +32,16 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean isLand = false;
     private NotesListFragment fragment;
 
-    public ItemsRecyclerAdapter(FragmentManager fragmentManager, NotesListFragment fragment) {
+    public ItemsRecyclerAdapter(FragmentManager fragmentManager,
+                                NotesListFragment fragment,
+                                List<Item> items) {
         mFragmentManager = fragmentManager;
         this.fragment = fragment;
-    }
-
-    public void updateList(List<Item> items, boolean isLand) {
         this.mItems = items;
         notifyDataSetChanged();
+    }
+
+    public void updateFlag(boolean isLand) {
         this.isLand = isLand;
     }
 
@@ -86,24 +91,16 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                 .commit();
     }
 
-    private class NoteViewHolder extends BaseViewHolder {
+    class NoteViewHolder extends BaseViewHolder {
 
-        LinearLayout rootView;
+        @BindView(R.id.text)
         TextView noteText;
+        @BindView(R.id.created)
         TextView noteDateCreated;
 
         NoteViewHolder(View view) {
             super(view);
-            rootView = view.findViewById(R.id.root);
-            noteText = view.findViewById(R.id.text);
-            noteDateCreated = view.findViewById(R.id.created);
-
-            rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    replaceFragment(getAdapterPosition());
-                }
-            });
+            ButterKnife.bind(this, view);
         }
 
         @Override
@@ -112,30 +109,27 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
             noteText.setText(note.getText());
             noteDateCreated.setText(note.getDateCreated());
         }
+
+        @OnClick(R.id.root)
+        void onClick() {
+            replaceFragment(getAdapterPosition());
+        }
     }
 
-    private class NotificationViewHolder extends BaseViewHolder {
+    class NotificationViewHolder extends BaseViewHolder {
 
-        LinearLayout rootView;
+        @BindView(R.id.text)
         TextView notificationText;
+        @BindView(R.id.created)
         TextView notificationDateCreated;
+        @BindView(R.id.time)
         TextView notificationTime;
+        @BindView(R.id.ic_image)
         ImageView notificationIcon;
 
         NotificationViewHolder(View view) {
             super(view);
-            rootView = view.findViewById(R.id.root);
-            notificationText = view.findViewById(R.id.text);
-            notificationDateCreated = view.findViewById(R.id.created);
-            notificationTime = view.findViewById(R.id.time);
-            notificationIcon = view.findViewById(R.id.ic_image);
-
-            rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    replaceFragment(getAdapterPosition());
-                }
-            });
+            ButterKnife.bind(this, view);
         }
 
         @Override
@@ -150,6 +144,11 @@ public class ItemsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.View
                                 Paint.STRIKE_THRU_TEXT_FLAG);
                 notificationIcon.setImageResource(R.drawable.ic_notifications_black_48dp);
             }
+        }
+
+        @OnClick(R.id.root)
+        void onClick() {
+            replaceFragment(getAdapterPosition());
         }
     }
 

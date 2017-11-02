@@ -146,7 +146,7 @@ public class DataSource {
     public Notification getNotificationById(long notificationId) {
         Notification notification = null;
         Cursor cursor = mContentResolver
-                .query(Entry.NOTES_URI,
+                .query(Entry.NOTIFICATIONS_URI,
                         null,
                         Schema.ID + Q,
                         new String[]{String.valueOf(notificationId)},

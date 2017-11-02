@@ -3,8 +3,6 @@ package com.sakurov.notes.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.sakurov.notes.data.DataSource;
-
 import java.util.Date;
 
 public class Notification extends Note implements Parcelable, Item {

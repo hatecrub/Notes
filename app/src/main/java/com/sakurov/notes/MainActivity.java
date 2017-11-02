@@ -1,7 +1,6 @@
 package com.sakurov.notes;
 
 import android.animation.LayoutTransition;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                     mPrefsManager.setCurrentUserId(dbSource.getUserId(user));
                     addAsRootFragment(NotesListFragment.newInstance());
                 } else {
-                    Toast.makeText(this, getString(R.string.user_dont_exist), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.user_do_not_exist), Toast.LENGTH_SHORT).show();
                     addAsRootFragment(ChooseFragment.newInstance());
                 }
 
@@ -162,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
             params.weight = 0.0f;
             detailsFrame.setLayoutParams(params);
             isLandContainerShown = false;
+            setActionBarTitle(getString(R.string.title_my_notes));
         }
     }
 

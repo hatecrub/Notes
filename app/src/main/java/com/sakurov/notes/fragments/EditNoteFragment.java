@@ -14,12 +14,19 @@ import com.sakurov.notes.R;
 import com.sakurov.notes.entities.Note;
 import com.sakurov.notes.data.DataSource;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class EditNoteFragment extends BaseFragment {
 
-    private EditText mEditNote;
-    FloatingActionButton mFabDone;
+    @BindView(R.id.text)
+    EditText mEditNote;
+
+    @BindView(R.id.in_layout)
+    TextInputLayout textIn;
+
     private Note mNote;
-    private DataSource mDataSource;
 
     public static EditNoteFragment newInstance() {
         return new EditNoteFragment();
@@ -43,65 +50,54 @@ public class EditNoteFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_edit_note, container, false);
-        TextInputLayout textIn = rootView.findViewById(R.id.in_layout);
-
-        mEditNote = rootView.findViewById(R.id.text);
-        mFabDone = rootView.findViewById(R.id.fab_done);
+        unbinder = ButterKnife.bind(this, rootView);
 
         readBundle(getArguments());
 
-        String FRAGMENT_TITLE;
+        String fragmentTitle;
         if (mNote != null) {
-            FRAGMENT_TITLE = getString(R.string.title_edit_note);
-            setTitle(FRAGMENT_TITLE);
+            fragmentTitle = getString(R.string.title_edit_note);
+            setTitle(fragmentTitle);
             mEditNote.setText(mNote.getText());
             if (savedInstanceState == null) {
                 showSoftKeyboard(mEditNote);
             }
         } else {
-            FRAGMENT_TITLE = getString(R.string.title_new_note);
+            fragmentTitle = getString(R.string.title_new_note);
             if (savedInstanceState == null) {
                 mEditNote.requestFocus();
             }
         }
 
-        textIn.setHint(FRAGMENT_TITLE);
+        textIn.setHint(fragmentTitle);
 
         return rootView;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        mDataSource = new DataSource(getActivity());
-
-        mFabDone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (isInputValid()) {
-                    if (mNote == null) {
-                        mNote = new Note(PrefsManager.getInstance().getCurrentUserID(),
-                                mEditNote.getText().toString());
-                        mNote.setId(mDataSource.addNote(mNote));
-                        getParentFragment().getFragmentManager().popBackStack();
-                        if (getParentFragment().getFragmentManager().getBackStackEntryCount() > 1) {
-                            showLandContainer();
-                        }
-                    } else {
-                        mNote.setText(mEditNote.getText().toString());
-                        mDataSource.updateNote(mNote);
-                        getFragmentManager().popBackStack();
-                        showLandContainer();
-                        updateLandContainer();
-                    }
-                } else
-                    showToast(R.string.empty_note);
-            }
-        });
-    }
-
     private boolean isInputValid() {
         return !mEditNote.getText().toString().isEmpty();
+    }
+
+    @OnClick(R.id.fab_done)
+    void onClick() {
+        if (isInputValid()) {
+            DataSource dataSource = new DataSource(getContext());
+            if (mNote == null) {
+                mNote = new Note(PrefsManager.getInstance().getCurrentUserID(),
+                        mEditNote.getText().toString());
+                mNote.setId(dataSource.addNote(mNote));
+                getParentFragment().getFragmentManager().popBackStack();
+                if (getParentFragment().getFragmentManager().getBackStackEntryCount() > 1) {
+                    showLandContainer();
+                }
+            } else {
+                mNote.setText(mEditNote.getText().toString());
+                dataSource.updateNote(mNote);
+                getFragmentManager().popBackStack();
+                showLandContainer();
+                updateLandContainer();
+            }
+        } else
+            showToast(R.string.empty_note);
     }
 }

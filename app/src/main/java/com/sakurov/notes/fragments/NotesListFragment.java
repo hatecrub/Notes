@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.sakurov.notes.adapters.ItemsRecyclerAdapter;
 import com.sakurov.notes.utils.PrefsManager;
@@ -18,7 +17,14 @@ import com.sakurov.notes.data.DataSource;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class NotesListFragment extends BaseFragment {
+
+    @BindView(R.id.notes_list)
+    RecyclerView notesRecycler;
 
     private ItemsRecyclerAdapter mItemsRecyclerAdapter;
 
@@ -29,25 +35,17 @@ public class NotesListFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View rootView = inflater.inflate(R.layout.fragment_notes_list, container, false);
+        unbinder = ButterKnife.bind(this, rootView);
 
-        RecyclerView notesRecycler = rootView.findViewById(R.id.notes_list);
+        DataSource dataSource = new DataSource(getContext());
+        List<Item> items = dataSource.getAllRecords(PrefsManager.getInstance().getCurrentUserID());
+        mItemsRecyclerAdapter = new ItemsRecyclerAdapter(getFragmentManager(), this, items);
+
         notesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        mItemsRecyclerAdapter = new ItemsRecyclerAdapter(getFragmentManager(), this);
         notesRecycler.setAdapter(mItemsRecyclerAdapter);
 
         setTitle(getString(R.string.title_my_notes));
-
-        FloatingActionButton fabAddNote = rootView.findViewById(R.id.fab);
-        fabAddNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    hideLandContainer();
-                replaceFragment(ViewPagerFragment.newInstance(), true);
-            }
-        });
 
         return rootView;
     }
@@ -55,12 +53,13 @@ public class NotesListFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        DataSource dbSource = new DataSource(getActivity());
-        List<Item> items = dbSource.getAllRecords(PrefsManager.getInstance().getCurrentUserID());
-
-        mItemsRecyclerAdapter.updateList(items, isLand());
-
+        mItemsRecyclerAdapter.updateFlag(isLand());
         enableLogOutMenuItem(true);
+    }
+
+    @OnClick(R.id.fab)
+    void onClick() {
+        hideLandContainer();
+        replaceFragment(ViewPagerFragment.newInstance(), true);
     }
 }

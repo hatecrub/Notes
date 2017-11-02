@@ -2,26 +2,32 @@ package com.sakurov.notes.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sakurov.notes.data.DataSource;
-import com.sakurov.notes.utils.PrefsManager;
 import com.sakurov.notes.R;
+import com.sakurov.notes.data.DataSource;
 import com.sakurov.notes.entities.Note;
+import com.sakurov.notes.utils.PrefsManager;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class NoteFragment extends BaseFragment {
 
-    private Note mNote;
+    @BindView(R.id.text)
+    TextView noteText;
+    @BindView(R.id.author)
+    TextView noteAuthor;
+    @BindView(R.id.created)
+    TextView noteDateCreated;
+    @BindView(R.id.edited)
+    TextView noteDateEdited;
 
-    private TextView noteText;
-    private TextView noteAuthor;
-    private TextView noteDateCreated;
-    private TextView noteDateEdited;
+    private Note mNote;
 
     public static NoteFragment newInstance(Note note) {
         Bundle bundle = new Bundle();
@@ -43,27 +49,10 @@ public class NoteFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_note, container, false);
-
-        noteText = rootView.findViewById(R.id.text);
-        noteAuthor = rootView.findViewById(R.id.author);
-        noteDateCreated = rootView.findViewById(R.id.created);
-        noteDateEdited = rootView.findViewById(R.id.edited);
-        FloatingActionButton fabEditNote = rootView.findViewById(R.id.fab_edit);
+        unbinder = ButterKnife.bind(this, rootView);
 
         readBundle(getArguments());
-
         setTitle(getString(R.string.title_note));
-
-        fabEditNote.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mNote != null) {
-                    hideLandContainer();
-                    replaceFragment(EditNoteFragment.newInstance(mNote), true);
-                }
-            }
-        });
-
         updateDisplay();
 
         return rootView;
@@ -90,5 +79,13 @@ public class NoteFragment extends BaseFragment {
                 PrefsManager.getInstance().getCurrentUserName()));
         noteDateCreated.setText(String.format("%s%s", getString(R.string.created), mNote.getDateCreated()));
         noteDateEdited.setText(String.format("%s%s", getString(R.string.edited), mNote.getDateEdited()));
+    }
+
+    @OnClick(R.id.fab_edit)
+    public void onViewClicked() {
+        if (mNote != null) {
+            hideLandContainer();
+            replaceFragment(EditNoteFragment.newInstance(mNote), true);
+        }
     }
 }

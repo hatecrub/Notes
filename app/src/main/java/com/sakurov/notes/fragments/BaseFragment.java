@@ -6,13 +6,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.sakurov.notes.MainActivity;
 import com.sakurov.notes.R;
+
+import butterknife.Unbinder;
 
 abstract class BaseFragment extends Fragment {
 
@@ -21,6 +22,7 @@ abstract class BaseFragment extends Fragment {
 
     private String FRAGMENT_TITLE;
     private MainActivity mainActivity;
+    protected Unbinder unbinder;
 
     void replaceFragment(BaseFragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -93,5 +95,12 @@ abstract class BaseFragment extends Fragment {
             if (fragment != null)
                 fragment.update();
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (unbinder != null)
+            unbinder.unbind();
+        super.onDestroyView();
     }
 }
