@@ -24,11 +24,9 @@ import butterknife.OnClick;
 public class NotesAdapterDelegate extends AdapterDelegate<List<Item>> {
 
     private NotesListFragment mFragment;
-    private List<Item> items;
 
     NotesAdapterDelegate(NotesListFragment mFragment, List<Item> items) {
         this.mFragment = mFragment;
-        this.items = items;
     }
 
     @Override
@@ -56,6 +54,8 @@ public class NotesAdapterDelegate extends AdapterDelegate<List<Item>> {
         @BindView(R.id.created)
         TextView noteDateCreated;
 
+        private Note item;
+
         NoteViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -64,6 +64,7 @@ public class NotesAdapterDelegate extends AdapterDelegate<List<Item>> {
         @Override
         public void bind(Item item) {
             Note note = (Note) item;
+            this.item = note;
             noteText.setText(note.getText());
             noteDateCreated.setText(Utils.getDate(note.getDateCreated()));
         }
@@ -78,7 +79,7 @@ public class NotesAdapterDelegate extends AdapterDelegate<List<Item>> {
 
             mFragment.getFragmentManager().beginTransaction()
                     .replace(container,
-                            NoteFragment.newInstance((Note) items.get(getAdapterPosition())))
+                            NoteFragment.newInstance(item))
                     .addToBackStack(NoteFragment.class.getSimpleName())
                     .commit();
         }

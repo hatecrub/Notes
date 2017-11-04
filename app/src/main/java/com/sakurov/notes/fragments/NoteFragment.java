@@ -62,6 +62,7 @@ public class NoteFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //странное решение. фрагмент может задавать свое меню
         enableLogOutMenuItem(true);
     }
 
@@ -76,14 +77,15 @@ public class NoteFragment extends BaseFragment {
 
     private void updateDisplay() {
         noteText.setText(mNote.getText());
-        noteAuthor.setText(
-                String.format("%s%s", getString(R.string.author), PrefsManager.getInstance().getCurrentUserName()));
+        //в strings есть возможность задавать параметры.
+        noteAuthor.setText(getString(R.string.author, PrefsManager.getInstance().getCurrentUserName()));
         noteDateCreated.setText(
                 String.format("%s%s", getString(R.string.created), Utils.getDate(mNote.getDateCreated())));
         noteDateEdited.setText(
                 String.format("%s%s", getString(R.string.edited), Utils.getDate(mNote.getDateEdited())));
     }
 
+    //почему в самом низу?
     @OnClick(R.id.fab_edit)
     public void onViewClicked() {
         if (mNote != null) {

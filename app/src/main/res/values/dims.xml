@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    //в названии файла. dimens. не говори только что сэкономил два символа? :)
+    //названия так себе. не экономь тонер, не понятно что за primary
     <dimen name="primary_size">20sp</dimen>
     <dimen name="secondary_size">14sp</dimen>
     <dimen name="item_primary_size">18sp</dimen>
     <dimen name="item_secondary_size">12sp</dimen>
 
+    //что за падинг, маргин и инмаргин?
+    //выносить дименсы имеет смысл если они где-то повтаряются и должны быть одинаковые, например отступы у полей для ввода
+    //но тогда так и называй auth_text_horizontal_margin
     <dimen name="margin">16dp</dimen>
     <dimen name="padding">8dp</dimen>
     <dimen name="in_margin">12dp</dimen>
@@ -12,5 +17,6 @@
 
     <dimen name="item_height">120dp</dimen>
     <dimen name="item_margin">2dp</dimen>
+    //чей элевейшн?
     <dimen name="elevation">2dp</dimen>
 </resources>

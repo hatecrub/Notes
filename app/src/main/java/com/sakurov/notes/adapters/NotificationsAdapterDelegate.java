@@ -27,11 +27,9 @@ import butterknife.OnClick;
 public class NotificationsAdapterDelegate extends AdapterDelegate<List<Item>> {
 
     private NotesListFragment mFragment;
-    private List<Item> items;
 
     NotificationsAdapterDelegate(NotesListFragment mFragment, List<Item> items) {
         this.mFragment = mFragment;
-        this.items = items;
     }
 
     @Override
@@ -64,6 +62,10 @@ public class NotificationsAdapterDelegate extends AdapterDelegate<List<Item>> {
         @BindView(R.id.ic_image)
         ImageView notificationIcon;
 
+        //Тут я просто тестил, не сломается ли что-то. не призыв делать так всегда.
+        //Кажется хранить ссылку на список - это не затратно.
+        private Notification item;
+
         NotificationViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
@@ -72,6 +74,7 @@ public class NotificationsAdapterDelegate extends AdapterDelegate<List<Item>> {
         @Override
         public void bind(Item item) {
             Notification notification = (Notification) item;
+            this.item = notification;
             notificationText.setText(notification.getText());
             notificationDateCreated.setText(Utils.getDate(notification.getDateCreated()));
             notificationTime.setText(Utils.getDate(notification.getTimeInMillis()));
@@ -93,7 +96,7 @@ public class NotificationsAdapterDelegate extends AdapterDelegate<List<Item>> {
 
             mFragment.getFragmentManager().beginTransaction()
                     .replace(container,
-                            NotificationFragment.newInstance((Notification) items.get(getAdapterPosition())))
+                            NotificationFragment.newInstance(item))
                     .addToBackStack(NotificationFragment.class.getSimpleName())
                     .commit();
         }

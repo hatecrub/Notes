@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
             ((ViewGroup) findViewById(R.id.root)).getLayoutTransition()
                     .enableTransitionType(LayoutTransition.CHANGING);
 
+
+            //я бы вынес в отдельный метод
             if (mPrefsManager.isUserRemembered()) {
                 User user = mPrefsManager.getCurrentUser();
 
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        //уже писал, оригинально, но излишне. у фрагмента есть возможность свое меню создавать.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         menu.getItem(0).setVisible(mLogOffEnabled);
         return super.onCreateOptionsMenu(menu);

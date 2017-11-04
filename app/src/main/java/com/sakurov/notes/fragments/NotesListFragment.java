@@ -48,7 +48,9 @@ public class NotesListFragment extends BaseFragment {
         List<Item> items = dataSource.getAllRecords(PrefsManager.getInstance().getCurrentUserID());
 
         notesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        notesRecycler.setAdapter(new ItemRecyclerAdapter(items, this));
+        ItemRecyclerAdapter adapter = new ItemRecyclerAdapter(this);
+        notesRecycler.setAdapter(adapter);
+        adapter.setData(items);
 
         enableLogOutMenuItem(true);
     }

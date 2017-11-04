@@ -74,7 +74,8 @@ public class NotificationFragment extends BaseFragment {
     private void updateDisplay() {
         notificationText.setText(mNotification.getText());
         notificationAuthor.setText(
-                String.format("%s%s", getString(R.string.author), PrefsManager.getInstance().getCurrentUserName()));
+                //в другом классе написал про такое
+                getString(R.string.author, PrefsManager.getInstance().getCurrentUserName()));
         notificationDateCreated.setText(
                 String.format("%s%s", getString(R.string.created), Utils.getDate(mNotification.getDateCreated())));
         notificationDateEdited.setText(

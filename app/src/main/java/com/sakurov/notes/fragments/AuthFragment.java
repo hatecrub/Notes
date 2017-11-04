@@ -92,6 +92,7 @@ public class AuthFragment extends BaseFragment {
             User user = new User(mUserName.getText().toString(),
                     mUserPassword.getText().toString());
             switch (getArguments().getInt(ACTION)) {
+                //разнес бы это на методы для IN и UP.
                 case IN: {
                     if (dataSource.checkUserPass(user)) {
                         user.setId(dataSource.getUserId(user));

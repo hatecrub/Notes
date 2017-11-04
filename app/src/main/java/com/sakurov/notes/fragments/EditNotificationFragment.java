@@ -83,6 +83,7 @@ public class EditNotificationFragment extends BaseFragment {
 
         readBundle(getArguments());
 
+        //только константы, странный нейминг
         String FRAGMENT_TITLE;
         if (mNotification != null) {
             FRAGMENT_TITLE = getString(R.string.title_edit_notification);
@@ -108,6 +109,7 @@ public class EditNotificationFragment extends BaseFragment {
 
     @SuppressLint("SimpleDateFormat")
     private void updateDisplay() {
+        //у тебя в утилсах есть такой метод
         mDateAndTimeDisplay.setText(
                 new SimpleDateFormat("dd.MM.yyyy HH:mm")
                         .format(mCalendar.getTime()));

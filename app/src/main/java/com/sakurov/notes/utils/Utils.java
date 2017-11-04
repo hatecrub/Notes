@@ -7,6 +7,9 @@ import java.util.Date;
 
 public class Utils {
 
+    //опять же странный нейминг. как класса, так и метода.
+    //"dd.MM.yyyy HH:mm" в константу с более-менее говорящим названием. DATE_TIME_FORMAT?
+    //класс во что-то типа DateUtils, метод камел кейсом, во что-то адекватное. DateUtils.getFormattedDate(pattern)
     @SuppressLint("SimpleDateFormat")
     private final static SimpleDateFormat SIMPLE_DATE =
             new SimpleDateFormat("dd.MM.yyyy HH.mm");

@@ -22,6 +22,7 @@ import com.sakurov.notes.data.DBHelper.Schema;
 
 public class DataSource {
 
+    //не говорящее название
     private final static String Q = "=?";
 
     private static final long DO_NOT_EXIST = -1;
@@ -208,6 +209,12 @@ public class DataSource {
                 null);
     }
 
+    /*
+    кажется метод с сортировкой должен быть не тут, а там, где список непосредственно используется
+    в нашем случае, когда из базы достаешь только для основного списка - это маловажно.
+    но если абстрагироваться, то в теории надо будет наплодить кучку методов с разными сортировками в этом классе.
+    но это не точно. расскажи почему ты решил его тут написать.
+    */
     public List<Item> getAllRecords(long userId) {
         List<Item> items = new ArrayList<>();
         items.addAll(getNotes(userId));

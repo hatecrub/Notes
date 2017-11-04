@@ -15,6 +15,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        //тут я сторонник отдельных классов для каждой сущности,
+        //тут вызывать только sqLiteDatabase.execSQL(Entity.CREATE_TABLE)
         sqLiteDatabase.execSQL("CREATE TABLE " + Schema.USERS + " ("
                 + Schema.ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + Schema.NAME + " TEXT,"

@@ -9,7 +9,7 @@
     <string name="note">Note</string>
     <string name="log_out">Log out</string>
     <string name="empty_note">Note can\'t be empty and Date can\'t be outdated!"</string>
-    <string name="author">Author:\t</string>
+    <string name="author">Author:\t %s</string>
     <string name="created">Created:\t</string>
     <string name="user_do_not_exist">User do not exist or password is incorrect!</string>
     <string name="field_empty">Fill all fields, please!</string>

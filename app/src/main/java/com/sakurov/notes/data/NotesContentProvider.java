@@ -21,6 +21,7 @@ public class NotesContentProvider extends ContentProvider {
     public final static int NOTIFICATIONS = 300;
     public final static int NOTIFICATION_ID = 301;
 
+    //если ID это понятно, то Q не очень. код печатать не будем, думать об экономии тонера не надо
     private final static String Q = "=?";
     private final static String ID = "/#";
     private final static String UNKNOWN_URI = "Cannot query unknown URI: ";

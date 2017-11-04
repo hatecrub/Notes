@@ -20,6 +20,7 @@ abstract class BaseFragment extends Fragment {
     protected static final String NOTE = "note";
     public static final String NOTIFICATION = "notification";
 
+    //капсом через нижнее подчеркивание только константы
     private String FRAGMENT_TITLE;
     private MainActivity mainActivity;
     protected Unbinder unbinder;
@@ -27,6 +28,11 @@ abstract class BaseFragment extends Fragment {
     void replaceFragment(BaseFragment fragment, boolean addToBackStack) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment);
+
+        //часто видел что одно действие пишут без {}
+        // мое мнение, что лучше писать все равно, ибо если понадобится что-то добавить в иф
+        // - можно сделать себе труднонаходимый баг.
+        //подмечу что это не наставление исправить и писать всегда со скобками, просто мое мнение.
         if (addToBackStack)
             transaction.addToBackStack(fragment.getClass().getSimpleName());
         transaction.commit();
